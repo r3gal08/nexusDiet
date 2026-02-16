@@ -67,6 +67,20 @@
       <div class="value" id="word-count">-</div>
     </div>
 
+    <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
+      <div class="label" style="margin-bottom:5px;">Today's Diet</div>
+      <div style="display:flex; justify-content: space-between;">
+        <div>
+          <div class="secondary">Pages</div>
+          <div class="value" id="stats-pages">-</div>
+        </div>
+        <div>
+          <div class="secondary">Words</div>
+          <div class="value" id="stats-words">-</div>
+        </div>
+      </div>
+    </div>
+
     <div class="stat" id="keywords-container" style="display:none">
       <div class="label">Keywords</div>
       <div class="value" id="keywords-list"></div>
@@ -77,7 +91,7 @@
       <div class="value secondary" id="h1-content"></div>
     </div>
   </div>
-  <script src="popup.js"></script>
+  <script src="popup.js" type="module"></script>
 </body>
 
 </html>

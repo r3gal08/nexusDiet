@@ -1,4 +1,12 @@
+import db from './db.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Load stats
+    db.getStats().then(stats => {
+        document.getElementById('stats-pages').textContent = stats.pagesToday;
+        document.getElementById('stats-words').textContent = stats.wordsToday.toLocaleString();
+    }).catch(err => console.error("Failed to load stats:", err));
+
     // Try to get data from the active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
