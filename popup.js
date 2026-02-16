@@ -26,6 +26,35 @@ function checkStorage() {
 }
 
 function updateUI(data) {
-    document.getElementById('page-title').textContent = data.title || data.url;
+    document.getElementById('page-title').textContent = data.ogTitle || data.title || data.url;
     document.getElementById('word-count').textContent = data.wordCount;
+
+    // Type
+    if (data.ogType) {
+        document.getElementById('type-container').style.display = 'block';
+        document.getElementById('page-type').textContent = data.ogType;
+    }
+
+    // Keywords
+    const keywordsList = document.getElementById('keywords-list');
+    keywordsList.innerHTML = ''; // Clear previous
+    if (data.keywords) {
+        document.getElementById('keywords-container').style.display = 'block';
+        data.keywords.split(',').forEach(keyword => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = keyword.trim();
+            keywordsList.appendChild(span);
+        });
+    } else {
+        document.getElementById('keywords-container').style.display = 'none';
+    }
+
+    // H1
+    if (data.h1s && data.h1s.length > 0) {
+        document.getElementById('h1-container').style.display = 'block';
+        document.getElementById('h1-content').textContent = data.h1s[0];
+    } else {
+        document.getElementById('h1-container').style.display = 'none';
+    }
 }

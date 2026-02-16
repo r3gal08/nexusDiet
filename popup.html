@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Nexus Diet</title>
   <style>
@@ -8,39 +9,75 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 10px;
     }
+
     h1 {
       font-size: 16px;
       color: #333;
       border-bottom: 1px solid #ddd;
       padding-bottom: 5px;
     }
+
     .stat {
       margin-bottom: 8px;
     }
+
     .label {
       font-weight: bold;
       font-size: 12px;
       color: #666;
     }
+
     .value {
       font-size: 14px;
       color: #000;
       word-break: break-word;
     }
+
+    .secondary {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 11px;
+      margin-right: 3px;
+    }
   </style>
 </head>
+
 <body>
   <h1>Information Diet</h1>
   <div id="content">
     <div class="stat">
-      <div class="label">Current Page</div>
+      <div class="label">Title</div>
       <div class="value" id="page-title">Loading...</div>
     </div>
+
+    <div class="stat" id="type-container" style="display:none">
+      <div class="label">Type</div>
+      <div class="value" id="page-type">-</div>
+    </div>
+
     <div class="stat">
       <div class="label">Word Count</div>
       <div class="value" id="word-count">-</div>
     </div>
+
+    <div class="stat" id="keywords-container" style="display:none">
+      <div class="label">Keywords</div>
+      <div class="value" id="keywords-list"></div>
+    </div>
+
+    <div class="stat" id="h1-container" style="display:none">
+      <div class="label">Primary Heading</div>
+      <div class="value secondary" id="h1-content"></div>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
+
 </html>
