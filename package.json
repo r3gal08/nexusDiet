@@ -1,0 +1,30 @@
+{
+  "name": "nexusdiet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Readability.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r3gal08/nexusDiet.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r3gal08/nexusDiet/issues"
+  },
+  "homepage": "https://github.com/r3gal08/nexusDiet#readme",
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^13.0.1",
+    "webpack": "^5.105.2",
+    "webpack-cli": "^6.0.1"
+  }
+}

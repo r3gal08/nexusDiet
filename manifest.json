@@ -21,7 +21,6 @@
         "<all_urls>"
       ],
       "js": [
-        "Readability.js",
         "content.js"
       ]
     }

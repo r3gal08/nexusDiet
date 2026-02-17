@@ -1,4 +1,5 @@
 // Content script to read DOM information
+import { Readability } from '@mozilla/readability';
 
 function extractPageData() {
     const title = document.title;
