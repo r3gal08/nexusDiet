@@ -21,24 +21,49 @@ function extractPageData() {
     const h2s = getHeadings('h2');
     const h3s = getHeadings('h3');
 
-    // Basic reading of text content length as a proxy for information density
+    // Use Readability to parse the document
+    // We clone the document because Readability mutates the DOM
+    const documentClone = document.cloneNode(true);
+    const reader = new Readability(documentClone);
+    const article = reader.parse();
+
+    let contentSnippet, contentClean;
     const bodyText = document.body.innerText;
-    const wordCount = bodyText.trim().split(/\s+/).length;
-    const contentSnippet = bodyText.substring(0, 500).replace(/\s+/g, ' ').trim();
+
+    if (article) {
+        contentSnippet = article.excerpt;
+        contentClean = article.textContent;
+    } else {
+        // Fallback to raw text
+        contentSnippet = bodyText.substring(0, 500).replace(/\s+/g, ' ').trim();
+        contentClean = bodyText;
+    }
+
+    // Favicon
+    let favicon = '';
+    const linkRelIcon = document.querySelector("link[rel~='icon']");
+    if (linkRelIcon) {
+        favicon = linkRelIcon.href;
+    } else {
+        favicon = `${window.location.origin}/favicon.ico`;
+    }
 
     return {
         url: window.location.href,
-        title,
+        title: article ? article.title : title, // Readability title might be cleaner
         ogTitle,
-        description,
+        description: article ? article.excerpt : description,
         keywords,
         ogType,
         ogSiteName,
         h1s,
-        h2s: h2s.slice(0, 5), // Limit to first 5 H2s to save space/bandwidth if needed
+        h2s: h2s.slice(0, 5),
+        h2s: h2s.slice(0, 5),
         h3s: h3s.slice(0, 5),
-        wordCount,
+        wordCount: contentClean.trim().split(/\s+/).length,
         contentSnippet,
+        contentClean, // Full text content
+        favicon,
         timestamp: new Date().toISOString()
     };
 }
