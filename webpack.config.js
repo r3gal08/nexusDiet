@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         background: './background.js',
         content: './content.js',
-        popup: './popup.js'
+        popup: './popup.js',
+        dashboard: './dashboard.js'
     },
     output: {
         filename: '[name].js',
@@ -18,6 +19,7 @@ module.exports = {
             patterns: [
                 { from: "manifest.json", to: "." },
                 { from: "popup.html", to: "." },
+                { from: "dashboard.html", to: "." },
                 // Copy icons if you had any, e.g. { from: "icons", to: "icons" }
             ],
         }),
