@@ -263,21 +263,51 @@ function renderPieChart(sortedCats, totalCategorized) {
     const pieElement = document.getElementById('pie-chart');
     if (!pieElement) return;
 
-    let gradientStops = [];
-    let currentPercentage = 0;
+    pieElement.innerHTML = ''; // Clear previous SVG if any
+    pieElement.style.background = 'none'; // Remove any old conic-gradient
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.borderRadius = '50%';
+    svg.style.transform = 'rotate(-90deg)'; // Start at 12 o'clock
+
+    let cumulativePercent = 0;
+    const C = 2 * Math.PI * 25; // Circumference of radius 25 is ~157.08
 
     sortedCats.forEach(([cat, count]) => {
-        const sliceSize = (count / totalCategorized) * 100;
+        const percent = count / totalCategorized;
         const color = getCategoryColor(cat);
+        const sliceLength = percent * C;
 
-        // conic-gradient syntax: color start%, color end%
-        gradientStops.push(`${color} ${currentPercentage}% ${currentPercentage + sliceSize}%`);
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '50');
+        circle.setAttribute('cy', '50');
+        circle.setAttribute('r', '25');
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', color);
+        circle.setAttribute('stroke-width', '50'); // Thickness covers center to edge (r=0 to r=50)
+        circle.setAttribute('stroke-dasharray', `${sliceLength} ${C}`);
+        circle.setAttribute('stroke-dashoffset', `${-cumulativePercent * C}`);
 
-        currentPercentage += sliceSize;
+        // Tooltip native support
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${cat}: ${Math.round(percent * 100)}% (${count} pages)`;
+        circle.appendChild(title);
+
+        // Hover effect styling
+        circle.style.transition = 'opacity 0.2s';
+        circle.style.cursor = 'pointer';
+        circle.addEventListener('mouseenter', () => circle.style.opacity = '0.8');
+        circle.addEventListener('mouseleave', () => circle.style.opacity = '1');
+
+        svg.appendChild(circle);
+
+        cumulativePercent += percent;
     });
 
-    // Apply the gradient
-    pieElement.style.background = `conic-gradient(${gradientStops.join(', ')})`;
+    pieElement.appendChild(svg);
 }
 
 function getCategoryColor(category) {
