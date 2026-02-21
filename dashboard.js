@@ -95,13 +95,49 @@ function renderChart(visits) {
     const chartData = Object.values(dataByDay);
     const maxWords = Math.max(...chartData.map(d => d.words), 100); // at least 100 to avoid /0
 
+    const mainWrapper = document.createElement('div');
+    mainWrapper.style.display = 'flex';
+    mainWrapper.style.height = '100%';
+    mainWrapper.style.width = '100%';
+
+    // --- Y Axis ---
+    const yAxis = document.createElement('div');
+    yAxis.style.display = 'flex';
+    yAxis.style.flexDirection = 'column';
+    yAxis.style.justifyContent = 'space-between';
+    yAxis.style.alignItems = 'flex-end';
+    yAxis.style.paddingRight = '15px';
+    yAxis.style.paddingBottom = '25px'; // Leave space for X axis labels
+    yAxis.style.paddingTop = '20px'; // Align with chart area top padding
+    yAxis.style.borderRight = '1px solid var(--border)';
+    yAxis.style.color = 'var(--text-muted)';
+    yAxis.style.fontSize = '0.75rem';
+    yAxis.style.minWidth = '40px';
+
+    const formatLabel = (num) => num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num;
+
+    const lblTop = document.createElement('span');
+    lblTop.textContent = formatLabel(maxWords);
+    const lblMid = document.createElement('span');
+    lblMid.textContent = formatLabel(Math.floor(maxWords / 2));
+    const lblBot = document.createElement('span');
+    lblBot.textContent = '0';
+
+    yAxis.appendChild(lblTop);
+    yAxis.appendChild(lblMid);
+    yAxis.appendChild(lblBot);
+
+    mainWrapper.appendChild(yAxis);
+
     // Build a flexbox-based bar chart
     const chartWrapper = document.createElement('div');
     chartWrapper.style.display = 'flex';
     chartWrapper.style.height = '100%';
+    chartWrapper.style.flex = '1';
     chartWrapper.style.alignItems = 'flex-end';
     chartWrapper.style.justifyContent = 'space-around';
     chartWrapper.style.paddingTop = '20px'; // Space for tooltips/labels
+    chartWrapper.style.paddingLeft = '10px';
 
     chartData.forEach(dayInfo => {
         const heightPercent = (dayInfo.words / maxWords) * 100;
@@ -136,6 +172,7 @@ function renderChart(visits) {
         label.style.fontSize = '0.75rem';
         label.style.color = 'var(--text-muted)';
         label.style.marginTop = '0.5rem';
+        label.style.height = '15px'; // Fixed height to match Y axis padding calculation
 
         barContainer.appendChild(bar);
         barContainer.appendChild(label);
@@ -143,11 +180,12 @@ function renderChart(visits) {
 
         // Trigger animation
         setTimeout(() => {
-            bar.style.height = `calc(${heightPercent}% - 30px)`; // Account for label height
+            bar.style.height = `calc(${heightPercent}% - 25px)`; // Account for label height + margin
         }, 100);
     });
 
-    chartContainer.appendChild(chartWrapper);
+    mainWrapper.appendChild(chartWrapper);
+    chartContainer.appendChild(mainWrapper);
 }
 
 // Utility for animating numbers
