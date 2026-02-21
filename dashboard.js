@@ -254,6 +254,30 @@ function renderCategories(visits) {
         `;
         container.appendChild(row);
     });
+
+    // Also render the pie chart now that we have the sorted data
+    renderPieChart(sortedCats, totalCategorized);
+}
+
+function renderPieChart(sortedCats, totalCategorized) {
+    const pieElement = document.getElementById('pie-chart');
+    if (!pieElement) return;
+
+    let gradientStops = [];
+    let currentPercentage = 0;
+
+    sortedCats.forEach(([cat, count]) => {
+        const sliceSize = (count / totalCategorized) * 100;
+        const color = getCategoryColor(cat);
+
+        // conic-gradient syntax: color start%, color end%
+        gradientStops.push(`${color} ${currentPercentage}% ${currentPercentage + sliceSize}%`);
+
+        currentPercentage += sliceSize;
+    });
+
+    // Apply the gradient
+    pieElement.style.background = `conic-gradient(${gradientStops.join(', ')})`;
 }
 
 function getCategoryColor(category) {
