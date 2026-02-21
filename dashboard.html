@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -130,7 +131,8 @@
             gap: 1rem;
         }
 
-        select, button {
+        select,
+        button {
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text);
@@ -142,7 +144,8 @@
             transition: all 0.2s;
         }
 
-        select:hover, button:hover {
+        select:hover,
+        button:hover {
             border-color: var(--primary);
         }
 
@@ -176,7 +179,8 @@
             border: 1px solid var(--border);
         }
 
-        th, td {
+        th,
+        td {
             text-align: left;
             padding: 1rem;
             border-bottom: 1px solid var(--border);
@@ -231,22 +235,23 @@
             padding: 4rem 2rem;
             color: var(--text-muted);
         }
-        
+
         .loading {
             opacity: 0.5;
             pointer-events: none;
         }
-        
+
         a {
             color: var(--primary);
             text-decoration: none;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar">
@@ -279,12 +284,24 @@
             </div>
         </div>
 
-        <div class="section-header">
-            <h2 class="section-title">Consumption Activity (Last 7 Days)</h2>
-        </div>
-        
-        <div class="chart-container" id="chart-container">
-            <!-- Simple custom bar chart will be injected here -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div>
+                <div class="section-header" style="margin-bottom: 1rem;">
+                    <h2 class="section-title">Consumption Activity (Last 7 Days)</h2>
+                </div>
+                <div class="chart-container" id="chart-container" style="margin-bottom: 0;">
+                    <!-- Simple custom bar chart will be injected here -->
+                </div>
+            </div>
+            <div>
+                <div class="section-header" style="margin-bottom: 1rem;">
+                    <h2 class="section-title">Topics Breakdown</h2>
+                </div>
+                <div class="chart-container" id="category-container"
+                    style="margin-bottom: 0; padding: 1rem; overflow-y: auto;">
+                    <!-- Category list injected here -->
+                </div>
+            </div>
         </div>
 
         <div class="section-header">
@@ -301,6 +318,7 @@
                         <th>Time</th>
                         <th>Title</th>
                         <th>URL</th>
+                        <th>Category</th>
                         <th>Words</th>
                     </tr>
                 </thead>
@@ -314,4 +332,5 @@
     <!-- We use ES modules (type="module") which allows imports like in popup.js -->
     <script src="dashboard.js" type="module"></script>
 </body>
+
 </html>

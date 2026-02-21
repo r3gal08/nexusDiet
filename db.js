@@ -33,6 +33,7 @@ class NexusDB {
                     store.createIndex('url', 'url', { unique: false });
                     store.createIndex('timestamp', 'timestamp', { unique: false });
                     store.createIndex('wordCount', 'wordCount', { unique: false });
+                    store.createIndex('category', 'category', { unique: false });
                 }
             };
         });

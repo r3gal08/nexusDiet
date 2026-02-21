@@ -30,6 +30,9 @@ async function loadDashboard() {
         // 3. Render Chart
         renderChart(visits);
 
+        // 4. Render Categories
+        renderCategories(visits);
+
     } catch (error) {
         console.error("Failed to load dashboard data:", error);
     }
@@ -56,10 +59,15 @@ function renderTable(visits) {
         // Truncate title
         let title = visit.title || 'Unknown Title';
 
+        // Format Category
+        const cat = visit.category || 'Uncategorized';
+        const catColor = getCategoryColor(cat);
+
         tr.innerHTML = `
             <td style="color: var(--text-muted); font-size: 0.875rem;">${displayTime}</td>
             <td class="td-title" title="${title}">${title}</td>
             <td class="td-url"><a href="${visit.url}" target="_blank">${new URL(visit.url).hostname}</a></td>
+            <td><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:0.75rem; background:${catColor}20; color:${catColor};">${cat}</span></td>
             <td><span class="badge">${visit.wordCount || 0}</span></td>
         `;
         tbody.appendChild(tr);
@@ -208,4 +216,55 @@ function animateValue(id, start, end, duration) {
         }
     };
     window.requestAnimationFrame(step);
+}
+
+function renderCategories(visits) {
+    const container = document.getElementById('category-container');
+    container.innerHTML = '';
+
+    const catCounts = {};
+    let totalCategorized = 0;
+
+    visits.forEach(v => {
+        const cat = v.category || 'Uncategorized';
+        catCounts[cat] = (catCounts[cat] || 0) + 1;
+        totalCategorized++;
+    });
+
+    if (totalCategorized === 0) return;
+
+    // Sort by count
+    const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
+
+    sortedCats.forEach(([cat, count]) => {
+        const percent = Math.round((count / totalCategorized) * 100);
+        const color = getCategoryColor(cat);
+
+        const row = document.createElement('div');
+        row.style.marginBottom = '12px';
+
+        row.innerHTML = `
+            <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:4px;">
+                <span style="color:var(--text); font-weight:500;">${cat}</span>
+                <span style="color:var(--text-muted);">${percent}% (${count})</span>
+            </div>
+            <div style="width:100%; background:var(--border); height:6px; border-radius:3px; overflow:hidden;">
+                <div style="width:${percent}%; background:${color}; height:100%; border-radius:3px;"></div>
+            </div>
+        `;
+        container.appendChild(row);
+    });
+}
+
+function getCategoryColor(category) {
+    const colors = {
+        'Technology': '#3b82f6', // blue
+        'Sports': '#f97316',     // orange
+        'Politics': '#ef4444',   // red
+        'History': '#d946ef',    // fuchsia
+        'Science': '#10b981',    // emerald
+        'Entertainment': '#f59e0b', // amber
+        'Uncategorized': '#64748b'  // slate
+    };
+    return colors[category] || colors['Uncategorized'];
 }
