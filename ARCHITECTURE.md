@@ -25,18 +25,29 @@ To accurately track the user's "information diet," we must separate the signal (
 -   **Privacy**: User browsing history is sensitive. It should not leave the device.
 -   **Capacity**: IndexedDB handles large amounts of text data much better than `chrome.storage.local`.
 
-## 2. Tech Stack
+## 2. Site Classification
+
+To understand the "nutritional value" of the user's information diet, the app assigns a broad topic category (e.g., Technology, Sports, Politics) to each visited page.
+
+**Decision**: Keyword-based Heuristics (for now).
+-   Pages are scored in a `classifier.js` module running in the background script.
+-   We weight keywords based on where they appear (Title vs Description vs Body).
+-   *Future AI Integration*: This function is designed to be easily swapped out with a local LLM or `Transformers.js` model running in-browser, without changing how the background script or database fundamentally operates.
+
+## 3. Tech Stack
 -   **Manifest V3**: Future-proof Chrome extension standard.
--   **Vanilla JS**: No build steps (Webpack/Parcel) for now to keep the contribution barrier low and the project simple.
+-   **Webpack**: Used to bundle modules (like `@mozilla/readability` and `classifier.js`) and output them to a `dist/` directory.
+-   **Vanilla JS**: For UI elements like the Dashboard, we deliberately avoid heavy frameworks (React/Vue) to keep the extension blazingly fast and maintainable.
 
-## 3. Data Schema (IndexedDB)
+## 4. Data Schema (IndexedDB)
 
-The `visits` object store holds a record of every page visit. The schema is implicit (NoSQL), but the structure returned by `content.js` is as follows:
+The `visits` object store holds a record of every page visit. The schema is implicit (NoSQL), but the structure returned by `content.js` and enriched by `background.js` is as follows:
 
 | Field | Type | Source | Description |
 | :--- | :--- | :--- | :--- |
 | **`url`** | `string` | `window.location` | The full URL of the visited page. |
 | **`title`** | `string` | Readability / `document.title` | The clean article headline (preferred) or the raw page title. |
+| **`category`** | `string` | `classifier.js` | The broad topic (e.g., "Technology", "Sports") matching the content. |
 | **`contentClean`** | `string` | Readability / `body.innerText` | The **Meat**. The article text stripped of ads/nav. Used for future NLP. |
 | **`contentSnippet`** | `string` | Readability / `substring` | A short excerpt (first few lines) for display in the UI history list. |
 | **`wordCount`** | `number` | Calculated | Number of words in `contentClean`. Measuring the "nutritional value" of the visit. |
