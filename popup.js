@@ -7,18 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stats-words').textContent = stats.wordsToday.toLocaleString();
     }).catch(err => console.error("Failed to load stats:", err));
 
-    // Try to get data from the active tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
             chrome.tabs.sendMessage(tabs[0].id, { type: "GET_PAGE_DATA" }, (response) => {
-                if (chrome.runtime.lastError) {
-                    document.getElementById('page-title').textContent = "Error communicating with page.";
-                    console.error(chrome.runtime.lastError);
-                } else if (response) {
-                    updateUI(response);
-                } else {
-                    // Fallback to storage if content script didn't respond immediately (page might check storage)
+                // If there's no content script on the page (e.g. chrome:// tabs or new tabs), 
+                // chrome.runtime.lastError will be set. We can ignore it and fallback.
+                if (chrome.runtime.lastError || !response) {
                     checkStorage();
+                } else {
+                    updateUI(response);
                 }
             });
         }
