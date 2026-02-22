@@ -1,5 +1,5 @@
-import db from './db.js';
-import { categorizePage, calculateNutritionScore } from './classifier.js';
+import db from '../services/db.js';
+import { categorizePage, calculateNutritionScore } from '../services/classifier.js';
 
 // Background service worker
 

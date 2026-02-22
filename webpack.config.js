@@ -3,10 +3,10 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
-        background: './background.js',
-        content: './content.js',
-        popup: './popup.js',
-        dashboard: './dashboard.js'
+        background: './src/background/background.js',
+        content: './src/content/content.js',
+        popup: './src/popup/popup.js',
+        dashboard: './src/dashboard/dashboard.js'
     },
     output: {
         filename: '[name].js',
@@ -18,8 +18,8 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 { from: "manifest.json", to: "." },
-                { from: "popup.html", to: "." },
-                { from: "dashboard.html", to: "." },
+                { from: "src/popup/popup.html", to: "." },
+                { from: "src/dashboard/dashboard.html", to: "." },
                 // Copy icons if you had any, e.g. { from: "icons", to: "icons" }
             ],
         }),

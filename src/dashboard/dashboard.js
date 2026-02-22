@@ -1,4 +1,4 @@
-import db from './db.js';
+import db from '../services/db.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadDashboard();
