@@ -34,6 +34,9 @@ class NexusDB {
                     store.createIndex('timestamp', 'timestamp', { unique: false });
                     store.createIndex('wordCount', 'wordCount', { unique: false });
                     store.createIndex('category', 'category', { unique: false });
+                    store.createIndex('nutritionScore', 'nutritionScore', { unique: false });
+                    store.createIndex('activeReadTimeMs', 'activeReadTimeMs', { unique: false });
+                    store.createIndex('maxScrollPercent', 'maxScrollPercent', { unique: false });
                 }
             };
         });
@@ -88,6 +91,8 @@ class NexusDB {
 
             let count = 0;
             let totalWords = 0;
+            let totalNutrition = 0;
+            let nutritionCount = 0;
 
             const request = index.openCursor(range);
             request.onsuccess = (event) => {
@@ -97,11 +102,17 @@ class NexusDB {
                     if (cursor.value.wordCount) {
                         totalWords += parseInt(cursor.value.wordCount) || 0;
                     }
+                    if (cursor.value.nutritionScore) {
+                        totalNutrition += parseFloat(cursor.value.nutritionScore);
+                        nutritionCount++;
+                    }
                     cursor.continue();
                 } else {
+                    const avgNutritionScore = nutritionCount > 0 ? (totalNutrition / nutritionCount).toFixed(1) : 0;
                     resolve({
                         pagesToday: count,
-                        wordsToday: totalWords
+                        wordsToday: totalWords,
+                        avgNutritionScore: parseFloat(avgNutritionScore)
                     });
                 }
             };

@@ -1,6 +1,35 @@
 // Content script to read DOM information
 import { Readability } from '@mozilla/readability';
 
+let activeReadTimeMs = 0;
+let maxScrollPercent = 0;
+let hasSentData = false;
+
+// Track active reading time
+setInterval(() => {
+    if (!document.hidden) {
+        activeReadTimeMs += 1000;
+        checkAndSendData();
+    }
+}, 1000);
+
+// Track scroll depth
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight;
+    const winHeight = window.innerHeight;
+    const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+
+    if (scrollPercent > maxScrollPercent) {
+        maxScrollPercent = scrollPercent;
+    }
+
+    // Throttle the check so we aren't sending thousands of messages on a quick scroll
+    if (Math.random() > 0.9) {
+        checkAndSendData();
+    }
+});
+
 function extractPageData() {
     const title = document.title;
 
@@ -59,19 +88,48 @@ function extractPageData() {
         ogSiteName,
         h1s,
         h2s: h2s.slice(0, 5),
-        h2s: h2s.slice(0, 5),
         h3s: h3s.slice(0, 5),
         wordCount: contentClean.trim().split(/\s+/).length,
         contentSnippet,
         contentClean, // Full text content
         favicon,
+        activeReadTimeMs,
+        maxScrollPercent: Math.min(Math.round(maxScrollPercent), 100),
         timestamp: new Date().toISOString()
     };
 }
 
-// Send data to background/popup
-const pageData = extractPageData();
-chrome.runtime.sendMessage({ type: "DATA_COLLECTED", data: pageData });
+// Send data only when we think they've engaged, or when they leave
+function checkAndSendData() {
+    if (hasSentData) return;
+
+    // Minimum engagement threshold: 5 seconds AND scrolled at least 10%
+    // If the page is too short to scroll, maxScrollPercent might be NaN or 0, so fallback to just time if scrollHeight is small
+    const docHeight = document.documentElement.scrollHeight;
+    const winHeight = window.innerHeight;
+    const canScroll = docHeight > winHeight * 1.2;
+
+    if (activeReadTimeMs >= 5000 && (!canScroll || maxScrollPercent >= 10)) {
+        sendData();
+    }
+}
+
+function sendData() {
+    if (hasSentData) return;
+    hasSentData = true;
+    const pageData = extractPageData();
+    chrome.runtime.sendMessage({ type: "DATA_COLLECTED", data: pageData });
+}
+
+// Also send when they leave the tab/page
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+        sendData();
+    }
+});
+window.addEventListener('beforeunload', () => {
+    sendData();
+});
 
 // Also listen for requests from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

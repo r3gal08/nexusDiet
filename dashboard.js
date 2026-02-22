@@ -17,6 +17,7 @@ async function loadDashboard() {
         // Animate numbers for wow effect
         animateValue('stat-pages', 0, stats.pagesToday, 1000);
         animateValue('stat-words', 0, stats.wordsToday, 1000);
+        document.getElementById('stat-nutrition').textContent = stats.avgNutritionScore || 0; // Don't animate floats right now
 
         // Load recent visits
         const limit = 50; // Get more for the dashboard
@@ -63,11 +64,32 @@ function renderTable(visits) {
         const cat = visit.category || 'Uncategorized';
         const catColor = getCategoryColor(cat);
 
+        // Format Nutrition
+        const nutritionRaw = visit.nutritionScore || '-';
+        let nutritionColor = 'var(--text-muted)';
+        if (nutritionRaw !== '-') {
+            const score = parseFloat(nutritionRaw);
+            if (score >= 7) nutritionColor = 'var(--success)'; // Green
+            else if (score >= 4) nutritionColor = '#f59e0b'; // Amber/Yellow
+            else nutritionColor = '#ef4444'; // Red
+        }
+
+        // Format Read Time
+        const readTimeMs = visit.activeReadTimeMs || 0;
+        let readTimeStr = '-';
+        if (readTimeMs > 0) {
+            const secs = Math.floor(readTimeMs / 1000);
+            if (secs < 60) readTimeStr = `${secs}s`;
+            else readTimeStr = `${Math.floor(secs / 60)}m ${secs % 60}s`;
+        }
+
         tr.innerHTML = `
             <td style="color: var(--text-muted); font-size: 0.875rem;">${displayTime}</td>
             <td class="td-title" title="${title}">${title}</td>
             <td class="td-url"><a href="${visit.url}" target="_blank">${new URL(visit.url).hostname}</a></td>
             <td><span style="display:inline-block; padding:2px 6px; border-radius:4px; font-size:0.75rem; background:${catColor}20; color:${catColor};">${cat}</span></td>
+            <td><span style="color: ${nutritionColor}; font-weight: 600;">${nutritionRaw}</span></td>
+            <td><span style="color: var(--text-muted); font-size: 0.875rem;">${readTimeStr}</span></td>
             <td><span class="badge">${visit.wordCount || 0}</span></td>
         `;
         tbody.appendChild(tr);

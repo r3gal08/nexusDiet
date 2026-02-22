@@ -25,13 +25,13 @@ To accurately track the user's "information diet," we must separate the signal (
 -   **Privacy**: User browsing history is sensitive. It should not leave the device.
 -   **Capacity**: IndexedDB handles large amounts of text data much better than `chrome.storage.local`.
 
-## 2. Site Classification
+## 2. Site Classification & Nutritional Scoring
 
-To understand the "nutritional value" of the user's information diet, the app assigns a broad topic category (e.g., Technology, Sports, Politics) to each visited page.
+To understand the "nutritional value" of the user's information diet, the app assigns a broad topic category (e.g., Technology, Sports, Politics) and a "Nutrition Score" (1-10) to each visited page.
 
-**Decision**: Keyword-based Heuristics (for now).
--   Pages are scored in a `classifier.js` module running in the background script.
--   We weight keywords based on where they appear (Title vs Description vs Body).
+**Decision**: Keyword-based Heuristics & Engagement Tracking.
+-   **Categorization**: Pages are scored in a `classifier.js` module running in the background script. We weight keywords based on where they appear (Title vs Description vs Body).
+-   **Nutritional Scoring**: To prevent rewarding "doomscrolling," the `calculateNutritionScore` formula factors in the assigned category (e.g. Science gets a bonus, Entertainment a penalty), the word count, *and* reading engagement metrics (`activeReadTimeMs` and `maxScrollPercent`). Points are only awarded for long-form reading if the user actually spent minimal time and scrolled through the article.
 -   *Future AI Integration*: This function is designed to be easily swapped out with a local LLM or `Transformers.js` model running in-browser, without changing how the background script or database fundamentally operates.
 
 ## 3. Tech Stack
@@ -48,6 +48,9 @@ The `visits` object store holds a record of every page visit. The schema is impl
 | **`url`** | `string` | `window.location` | The full URL of the visited page. |
 | **`title`** | `string` | Readability / `document.title` | The clean article headline (preferred) or the raw page title. |
 | **`category`** | `string` | `classifier.js` | The broad topic (e.g., "Technology", "Sports") matching the content. |
+| **`nutritionScore`**| `number` | `classifier.js` | A calculated score (1-10) reflecting the healthiness of the content and the active reading engagement. |
+| **`activeReadTimeMs`**| `number`| `content.js` | The milliseconds spent actively focused on the tab (timer stops when hidden). |
+| **`maxScrollPercent`**| `number`| `content.js` | The maximum percentage (0-100) the user scrolled down the page. |
 | **`contentClean`** | `string` | Readability / `body.innerText` | The **Meat**. The article text stripped of ads/nav. Used for future NLP. |
 | **`contentSnippet`** | `string` | Readability / `substring` | A short excerpt (first few lines) for display in the UI history list. |
 | **`wordCount`** | `number` | Calculated | Number of words in `contentClean`. Measuring the "nutritional value" of the visit. |

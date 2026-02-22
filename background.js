@@ -1,5 +1,5 @@
 import db from './db.js';
-import { categorizePage } from './classifier.js';
+import { categorizePage, calculateNutritionScore } from './classifier.js';
 
 // Background service worker
 
@@ -14,8 +14,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         // Process data through categorizer, then save
         categorizePage(request.data).then(category => {
-            // Use the spread operator "..." to create a new object that includes all the properties from request.data, plus the new category property.
-            const enrichedData = { ...request.data, category };
+            const nutritionScore = calculateNutritionScore(request.data, category);
+
+            // Use the spread operator "..." to create a new object that includes all the properties from request.data, plus the new category and nutritionScore properties.
+            const enrichedData = { ...request.data, category, nutritionScore };
 
             // Persist to IndexedDB
             db.addVisit(enrichedData).catch(err => console.error("Failed to save visit:", err));

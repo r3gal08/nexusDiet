@@ -73,3 +73,55 @@ export async function categorizePage(pageData) {
 
     return topCategory;
 }
+
+// TODO: Need to review the heuristics for this function in general, but could enough for the general idea
+/**
+ * Calculates a "nutrition score" from 1-10 based on the content and read engagement.
+ * Higher scores mean "healthier" (more educational/longer) reading.
+ * Lower scores mean "junk food" (short, low engagement, entertainment).
+ * 
+ * @param {Object} pageData - Data extracted from the content script
+ * @param {string} category - The category determined for this page
+ * @returns {number} - The nutrition score (1-10)
+ */
+export function calculateNutritionScore(pageData, category) {
+    let score = 5; // Start at a baseline of 5
+
+    // TODO: Save these category types in a more official spot... (and add more of course!)
+    // 1. Topic/Category adjustments
+    const educationalCategories = ["Science", "History", "Technology"];
+    const leisureCategories = ["Entertainment", "Sports"];
+
+    if (educationalCategories.includes(category)) {
+        score += 2;
+    } else if (leisureCategories.includes(category)) {
+        score -= 2;
+    }
+
+    // 2. Reading Engagement Check
+    const words = parseInt(pageData.wordCount) || 0;
+    const timeSpentSecs = (parseInt(pageData.activeReadTimeMs) || 0) / 1000;
+    const scrollPercent = parseInt(pageData.maxScrollPercent) || 0;
+
+    // TODO: Honestly scroll percent could be useless if its a short page? IE the data could still be valid
+    // Determine if they actually "read" something substantial
+    // E.g., spent at least 15 seconds AND scrolled a bit, OR it's a very short piece they glanced at.
+    const actuallyRead = timeSpentSecs >= 5 && scrollPercent >= 10;
+
+    // 3. Length adjustments (ONLY if they actually read it)
+    if (words > 1000) {
+        if (actuallyRead && timeSpentSecs > 15) { // Ensure they spent at least 15s on a 1000+ word article
+            score += 3;
+        }
+    } else if (words > 500) {
+        if (actuallyRead) {
+            score += 1;
+        }
+    } else if (words < 200) {
+        // Doomscrolling penalty (especially if they just glazed over it quickly)
+        score -= 2;
+    }
+
+    // 4. Clamp between 1 and 10
+    return Math.max(1, Math.min(10, score));
+}
