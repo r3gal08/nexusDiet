@@ -31,6 +31,7 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: // Restrict parsing to a maximum value. Memory exhaustion vulnerability exists here
 	var payload WebhookPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		http.Error(w, "Bad request body", http.StatusBadRequest)
