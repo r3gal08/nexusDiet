@@ -24,7 +24,7 @@ func NewHandler() *Handler {
 }
 
 // Post handles POST requests from the bridge
-// C++ brain note: h == this 
+// C++ brain note: h == "this"
 func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -51,8 +51,11 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Verification Output
-	log.Printf("\n[Ingestion] Captured: %s", result.Title)
-	log.Printf("[Ingestion] Word Count: %d\n", result.WordCount)
+	log.Printf("\n[Ingestion] Captured:   %s", result.Title)
+	log.Printf("[Ingestion] Site:       %s", result.SiteName)
+	log.Printf("[Ingestion] Word Count: %d", result.WordCount)
+	log.Printf("[Ingestion] Snippet:    %s\n", result.ContentSnippet)
+	log.Printf("[Ingestion] Description:  %s\n", result.ContentClean)
 
 	// TODO: Store in DB (Note: we can use 'h' here as it is the pointer to the handler object)
 	w.WriteHeader(http.StatusOK)

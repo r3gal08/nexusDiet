@@ -7,3 +7,6 @@ dist/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Go Build Output
+proxy/bin/
