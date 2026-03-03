@@ -53,6 +53,13 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Skip persisting empty or non-article payloads
+	if result.WordCount == 0 {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Skipped empty article\n"))
+		return
+	}
+	
 	// Verification Output
 	log.Printf("\n[Ingestion] Captured:   %s", result.Title)
 	log.Printf("[Ingestion] Site:       %s", result.SiteName)

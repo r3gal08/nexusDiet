@@ -15,7 +15,9 @@ class TrackerBridge:
             if "text/html" in content_type:
                 # 2. Extract the raw, decrypted HTML payload
                 html_payload = flow.response.get_text()
-                url = flow.request.url
+                # Use pretty_url to get the hostname (from Host header/SNI)
+                # instead of just the IP address
+                url = flow.request.pretty_url
                 
                 # 3. Fire-and-forget Webhook to your local Go app
                 asyncio.create_task(self.send_to_tracker(url, html_payload))
