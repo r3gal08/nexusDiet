@@ -15,6 +15,7 @@ func main() {
 	http.HandleFunc("/ingest", ingest.Post)
 
 	// 3. Start server
+	// TODO: Implement graceful shutdown (Bug 4 in review) to handle SIGINT/SIGTERM properly
 	log.Println("Nexus Tracker Server listening on :3000")
 	if err := http.ListenAndServe(":3000", nil); err != nil {
 		log.Fatalf("Server failed: %v", err)

@@ -1,5 +1,6 @@
 package parser
 
+// TODO: Update readbility packge to: codeberg.org/readeck/go-readability/v2
 import (
 	"fmt"
 	"net/url"
