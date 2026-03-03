@@ -1,11 +1,13 @@
 package ingestion
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 
 	"nexusdiet-proxy/internal/parser"
+	"nexusdiet-proxy/internal/storage"
 )
 
 // WebhookPayload defines the expected JSON structure from mitmproxy
@@ -15,12 +17,13 @@ type WebhookPayload struct {
 }
 
 // Handler holds dependencies for ingestion logic
-// Bit of a skelton for now, will eventually add things later like a logger or DB
-type Handler struct{}
+type Handler struct {
+	store *storage.Store
+}
 
-// NewHandler creates a new Ingestion handler
-func NewHandler() *Handler {
-	return &Handler{}
+// NewHandler creates a new Ingestion handler with a database store
+func NewHandler(store *storage.Store) *Handler {
+	return &Handler{store: store}
 }
 
 // Post handles POST requests from the bridge
@@ -31,7 +34,7 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Restrict request body size (e.g. via http.MaxBytesReader) to prevent memory exhaustion (Bug 3)
+	// TODO: Restrict request body size (e.g. via http.MaxBytesReader) to prevent memory exhaustion
 	var payload WebhookPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		http.Error(w, "Bad request body", http.StatusBadRequest)
@@ -55,9 +58,16 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[Ingestion] Site:       %s", result.SiteName)
 	log.Printf("[Ingestion] Word Count: %d", result.WordCount)
 	log.Printf("[Ingestion] Snippet:    %s\n", result.ContentSnippet)
-	log.Printf("[Ingestion] Description:  %s\n", result.ContentClean)
 
-	// TODO: Store in DB (Note: we can use 'h' here as it is the pointer to the handler object)
+	// Persist to database
+	if err := h.store.InsertVisit(context.Background(), payload.URL, result); err != nil {
+		log.Printf("[Ingestion] DB insert failed: %v", err)
+		http.Error(w, "Failed to store visit", http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("[Ingestion] Stored visit for: %s", payload.URL)
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Ingested successfully\n"))
 }
