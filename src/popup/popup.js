@@ -24,6 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('open-dashboard').addEventListener('click', () => {
         chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') });
     });
+
+    // Load backend toggle state
+    chrome.storage.local.get(['useBackendServer'], (result) => {
+        document.getElementById('backend-toggle').checked = !!result.useBackendServer;
+    });
+
+    // Save toggle state on click
+    document.getElementById('backend-toggle').addEventListener('change', (e) => {
+        chrome.storage.local.set({ useBackendServer: e.target.checked });
+    });
 });
 
 function checkStorage() {

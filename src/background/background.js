@@ -12,22 +12,39 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "DATA_COLLECTED") {
         console.log("Data collected:", request.data);
 
-        // Process data through categorizer, then save
-        categorizePage(request.data).then(category => {
-            const nutritionScore = calculateNutritionScore(request.data, category);
+        // Check user preference for storage
+        chrome.storage.local.get(['useBackendServer'], (result) => {
+            if (result.useBackendServer) {
+                // Send to Go Backend
+                if (request.data.html && request.data.url) {
+                    fetch("http://localhost:3000/ingest", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            url: request.data.url,
+                            html: request.data.html
+                        })
+                    }).catch(err => console.error("Failed to push to Go backend:", err));
+                }
+            } else {
+                // Default: Process data through categorizer, then save to IndexedDB
+                categorizePage(request.data).then(category => {
+                    const nutritionScore = calculateNutritionScore(request.data, category);
 
-            // Use the spread operator "..." to create a new object that includes all the properties from request.data, plus the new category and nutritionScore properties.
-            const enrichedData = { ...request.data, category, nutritionScore };
+                    // Use the spread operator "..." to create a new object that includes all the properties from request.data, plus the new category and nutritionScore properties.
+                    const enrichedData = { ...request.data, category, nutritionScore };
 
-            // Persist to IndexedDB
-            db.addVisit(enrichedData).catch(err => console.error("Failed to save visit:", err));
+                    // Persist to IndexedDB
+                    db.addVisit(enrichedData).catch(err => console.error("Failed to save visit:", err));
 
-            // Still update local storage for quick access by popup
-            chrome.storage.local.set({ lastPageData: enrichedData });
-        }).catch(err => {
-            console.error("Classification failed:", err);
-            // Save anyway if classification fails
-            db.addVisit(request.data);
+                    // Still update local storage for quick access by popup
+                    chrome.storage.local.set({ lastPageData: enrichedData });
+                }).catch(err => {
+                    console.error("Classification failed:", err);
+                    // Save anyway if classification fails
+                    db.addVisit(request.data);
+                });
+            }
         });
     }
 });

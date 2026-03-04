@@ -80,6 +80,7 @@ function extractPageData() {
 
     return {
         url: window.location.href,
+        html: document.documentElement.outerHTML,
         title: article ? article.title : title, // Readability title might be cleaner
         ogTitle,
         description: article ? article.excerpt : description,
@@ -103,13 +104,8 @@ function extractPageData() {
 function checkAndSendData() {
     if (hasSentData) return;
 
-    // Minimum engagement threshold: 5 seconds AND scrolled at least 10%
-    // If the page is too short to scroll, maxScrollPercent might be NaN or 0, so fallback to just time if scrollHeight is small
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const canScroll = docHeight > winHeight * 1.2;
-
-    if (activeReadTimeMs >= 5000 && (!canScroll || maxScrollPercent >= 10)) {
+    // Minimum engagement threshold: 5 seconds
+    if (activeReadTimeMs >= 5000) {
         sendData();
     }
 }
