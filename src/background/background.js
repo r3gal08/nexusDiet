@@ -17,7 +17,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if (result.useBackendServer) {
                 // Determine target IP
                 const targetHost = result.backendIP || 'localhost';
-                const endpoint = `http://${targetHost}:3000/ingest`;
+                // Send securely to the reverse proxy on standard HTTPS port 443
+                const endpoint = `https://${targetHost}/ingest`;
 
                 // Send to Go Backend
                 if (request.data.html && request.data.url) {
