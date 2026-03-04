@@ -13,11 +13,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log("Data collected:", request.data);
 
         // Check user preference for storage
-        chrome.storage.local.get(['useBackendServer'], (result) => {
+        chrome.storage.local.get(['useBackendServer', 'backendIP'], (result) => {
             if (result.useBackendServer) {
+                // Determine target IP
+                const targetHost = result.backendIP || 'localhost';
+                const endpoint = `http://${targetHost}:3000/ingest`;
+
                 // Send to Go Backend
                 if (request.data.html && request.data.url) {
-                    fetch("http://localhost:3000/ingest", {
+                    fetch(endpoint, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({

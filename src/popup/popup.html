@@ -98,11 +98,18 @@
     </div>
 
     <div
-      style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-      <div class="label">Storage Backend</div>
-      <div>
-        <input type="checkbox" id="backend-toggle" title="Check to send data to Go Backend (localhost:3000)">
-        <label style="font-size: 11px; margin-left: 5px;">Go Server</label>
+      style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; flex-direction: column; gap: 5px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="label">Storage Backend</div>
+        <div>
+          <input type="checkbox" id="backend-toggle" title="Check to send data to Go Backend">
+          <label style="font-size: 11px; margin-left: 5px;">Go Server</label>
+        </div>
+      </div>
+      <div id="server-url-container"
+        style="display: none; justify-content: space-between; align-items: center; margin-top: 5px;">
+        <div class="label" style="font-size: 10px;">Server IP:</div>
+        <input type="text" id="server-ip" value="localhost" style="font-size: 11px; width: 100px; padding: 2px;">
       </div>
     </div>
   </div>

@@ -25,14 +25,27 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') });
     });
 
-    // Load backend toggle state
-    chrome.storage.local.get(['useBackendServer'], (result) => {
-        document.getElementById('backend-toggle').checked = !!result.useBackendServer;
+    // Load backend toggle and IP state
+    chrome.storage.local.get(['useBackendServer', 'backendIP'], (result) => {
+        const toggle = document.getElementById('backend-toggle');
+        const ipInput = document.getElementById('server-ip');
+        const ipContainer = document.getElementById('server-url-container');
+
+        toggle.checked = !!result.useBackendServer;
+        ipInput.value = result.backendIP || 'localhost';
+        ipContainer.style.display = toggle.checked ? 'flex' : 'none';
     });
 
     // Save toggle state on click
     document.getElementById('backend-toggle').addEventListener('change', (e) => {
-        chrome.storage.local.set({ useBackendServer: e.target.checked });
+        const isChecked = e.target.checked;
+        chrome.storage.local.set({ useBackendServer: isChecked });
+        document.getElementById('server-url-container').style.display = isChecked ? 'flex' : 'none';
+    });
+
+    // Save IP state on change
+    document.getElementById('server-ip').addEventListener('input', (e) => {
+        chrome.storage.local.set({ backendIP: e.target.value });
     });
 });
 
