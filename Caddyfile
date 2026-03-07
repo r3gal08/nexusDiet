@@ -1,0 +1,44 @@
+localhost:443, 192.168.4.230:443 {
+    # 1. REVERSE PROXY: Forward all traffic to the Go application on port 3000.
+    reverse_proxy localhost:3000
+
+    # 2. CORS (Cross-Origin Resource Sharing): 
+    # This section is essentially a "Guest List". Without these headers, 
+    # modern browsers will block the extension from talking to the backend.
+    header {
+        # ALLOW ANY ORIGIN: Currently set to "*" for easy development.
+        # This tells the browser: "I don't care who is asking, let them in."
+        Access-Control-Allow-Origin *
+        
+        # ALLOWED METHODS: Explicitly permits the background script to use POST.
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        
+        # ALLOWED HEADERS: "Content-Type" is required for JSON payloads used by fetch().
+        Access-Control-Allow-Headers "Content-Type"
+        
+        # DEFER: Ensures these headers win if the backend also tries to send them.
+        defer
+    }
+
+    # 3. PREFLIGHT HANDSHAKE:
+    # Browsers send a tiny "test" request (OPTIONS) before the real data.
+    # We catch it here and reply with "204 No Content" (Success) so the 
+    # browser proceeds with the real POST request.
+    @options {
+        method OPTIONS
+    }
+    respond @options 204
+
+    # --- FUTURE IMPROVEMENTS FOR PRODUCTION ---
+    #
+    # [SECURITY] RESTRICT ORIGIN: Replace "*" with your official Extension ID:
+    # (e.g., Access-Control-Allow-Origin "moz-extension://YOUR-UUID")
+    #
+    # [RELIABILITY] RATE LIMITING: Use Caddy's 'ratelimit' module to prevent
+    # a runaway script or malicious actor from flooding your ingestion endpoint.
+    #
+    # [LOGGING] ACCESS LOGS: Add 'log' to record who is hitting the proxy.
+    #
+    # [DNS] REAL DOMAIN: In production, change 'localhost' to 'api.yourdomain.com'
+    # and Caddy will automatically fetch "Real" SSL certificates from Let's Encrypt.
+}

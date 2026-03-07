@@ -15,10 +15,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // Check user preference for storage
         chrome.storage.local.get(['useBackendServer', 'backendIP'], (result) => {
             if (result.useBackendServer) {
-                // Determine target IP
-                const targetHost = result.backendIP || 'localhost';
-                // Send securely to the reverse proxy on standard HTTPS port 443
-                const endpoint = `https://${targetHost}/ingest`;
+                // Determine target IP or URL
+                let targetHost = result.backendIP || 'localhost';
+                // Clean up any trailing slashes to properly format the endpoint path
+                targetHost = targetHost.replace(/\/+$/, '');
+                
+                let endpoint = '';
+                // Allow the user to specify http or https to cover both Caddy (HTTPS) and local testing (HTTP/3000)
+                if (targetHost.startsWith('http://') || targetHost.startsWith('https://')) {
+                    endpoint = `${targetHost}/ingest`;
+                } else {
+                    // Default to Caddy's secure port
+                    endpoint = `https://${targetHost}/ingest`;
+                }
 
                 // Send to Go Backend
                 if (request.data.html && request.data.url) {

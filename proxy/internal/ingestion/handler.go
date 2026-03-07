@@ -59,7 +59,7 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Skipped empty article\n"))
 		return
 	}
-	
+
 	// Verification Output
 	log.Printf("\n[Ingestion] Captured:   %s", result.Title)
 	log.Printf("[Ingestion] Site:       %s", result.SiteName)
