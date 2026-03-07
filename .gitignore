@@ -10,3 +10,6 @@ Thumbs.db
 
 # Go Build Output
 proxy/bin/
+
+# Local
+local/

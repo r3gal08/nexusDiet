@@ -38,7 +38,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             url: request.data.url,
                             html: request.data.html
                         })
-                    }).catch(err => console.error("Failed to push to Go backend:", err));
+                    }).catch(err => {
+                        console.error("Fetch failed entirely. Error name:", err.name);
+                        console.error("Fetch error message:", err.message);
+                        console.error("Endpoint attempted:", endpoint);
+                    });
                 }
             } else {
                 // Default: Process data through categorizer, then save to IndexedDB
