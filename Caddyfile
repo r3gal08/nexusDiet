@@ -1,12 +1,5 @@
-localhost:443, 192.168.4.230:443 {
-    # 1. LOGGING: Watch traffic in your Caddy terminal
-    log
-
-    # 2. REVERSE PROXY: Forward all traffic to Go on port 3000
-    reverse_proxy localhost:3000
-
-    # 3. BROWSER SECURITY (CORS & Private Networks)
-    # These headers allow the extension to push data from any website to this IP.
+# Shared snippet for CORS headers
+(cors_headers) {
     header {
         Access-Control-Allow-Origin *
         Access-Control-Allow-Methods "GET, POST, OPTIONS"
@@ -14,16 +7,26 @@ localhost:443, 192.168.4.230:443 {
         Access-Control-Allow-Private-Network "true"
         defer
     }
-
-    # 4. PREFLIGHT HANDSHAKE
-    # Silently handle the browser's "Is it okay to send?" check.
     @options {
         method OPTIONS
     }
     handle @options {
         respond 204
     }
+}
 
-    # Note: In production, swap 'localhost' for a real domain name 
-    # and Caddy will handle Let's Encrypt certificates automatically!
+# Local loopback (desktop browser testing)
+localhost:443 {
+    log
+    tls internal
+    reverse_proxy localhost:3000
+    import cors_headers
+}
+
+# LAN IP (phone / other devices on the network)
+https://192.168.4.230 {
+    log
+    tls internal
+    reverse_proxy localhost:3000
+    import cors_headers
 }

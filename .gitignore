@@ -1,15 +1,22 @@
 # Dependencies
 node_modules/
+extension/node_modules/
 
 # Build Output
 dist/
+local/
+extension/local/
+
+# Archive
+Archive/
 
 # OS Files
 .DS_Store
 Thumbs.db
 
 # Go Build Output
-proxy/bin/
+backend/bin/
+bin/
 
-# Local
-local/
+# Docker
+.docker/

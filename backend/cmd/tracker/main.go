@@ -3,17 +3,20 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"nexusdiet-proxy/internal/ingestion"
 	"nexusdiet-proxy/internal/storage"
 )
 
-// Connection string for the local PostgreSQL container.
-// TODO: Move to an environment variable before production use.
-const dbConnStr = "postgres://nexus:nexus@localhost:5433/nexusdiet"
-
 func main() {
 	// 1. Connect to the database
+	// Use environment variable for Docker/Cloud, fallback to localhost for dev
+	dbConnStr := os.Getenv("DATABASE_URL")
+	if dbConnStr == "" {
+		dbConnStr = "postgres://nexus:nexus@localhost:5433/nexusdiet"
+	}
+
 	store, err := storage.NewStore(dbConnStr)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
