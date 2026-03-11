@@ -8,8 +8,8 @@
     "build": "webpack --env MANIFEST_VER=3",
     "build:v2": "webpack --env MANIFEST_VER=2",
     "build:v3": "webpack --env MANIFEST_VER=3",
-    "zip:v2": "npm run build:v2 && mkdir -p local && cd local/dist && zip -r ../nexusDiet_v2.zip .",
-    "zip:v3": "npm run build:v3 && mkdir -p local && cd local/dist && zip -r ../nexusDiet_v3.zip .",
+    "zip:v2": "npm run build:v2 && mkdir -p dist && cd dist && zip -r ../nexusDiet_v2.zip . && cd ..",
+    "zip:v3": "npm run build:v3 && mkdir -p dist && cd dist && zip -r ../nexusDiet_v3.zip . && cd ..",
     "watch": "webpack --watch"
   },
   "repository": {

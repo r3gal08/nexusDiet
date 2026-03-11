@@ -26,6 +26,7 @@ func NewHandler(store *storage.Store) *Handler {
 	return &Handler{store: store}
 }
 
+// TODO: Input sanitation with blue monday or something similar
 // Post handles POST requests from the bridge
 // C++ brain note: h == "this"
 func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
