@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"nexusdiet-proxy/internal/api"
-	"nexusdiet-proxy/internal/ingestion"
 	"nexusdiet-proxy/internal/storage"
 )
 
@@ -27,11 +26,11 @@ func main() {
 	log.Println("Connected to PostgreSQL")
 
 	// 2. Initialize handlers with the DB store
-	ingest := ingestion.NewHandler(store)
+	ingestHandler := api.NewIngestionHandler(store)
 	dashHandler := api.NewDashboardHandler(store)
 
 	// 3. Register routes
-	http.HandleFunc("/ingest", ingest.Post)
+	http.HandleFunc("/ingest", ingestHandler.Post)
 	http.HandleFunc("/api/visits", dashHandler.GetRecentVisits)
 
 	// 4. Start server

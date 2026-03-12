@@ -1,4 +1,4 @@
-package ingestion
+package api
 
 import (
 	"context"
@@ -16,20 +16,20 @@ type WebhookPayload struct {
 	HTML string `json:"html"`
 }
 
-// Handler holds dependencies for ingestion logic
-type Handler struct {
+// IngestionHandler holds dependencies for ingestion logic
+type IngestionHandler struct {
 	store *storage.Store
 }
 
-// NewHandler creates a new Ingestion handler with a database store
-func NewHandler(store *storage.Store) *Handler {
-	return &Handler{store: store}
+// NewIngestionHandler creates a new Ingestion handler with a database store
+func NewIngestionHandler(store *storage.Store) *IngestionHandler {
+	return &IngestionHandler{store: store}
 }
 
 // TODO: Input sanitation with blue monday or something similar
 // Post handles POST requests from the bridge
 // C++ brain note: h == "this"
-func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
+func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
