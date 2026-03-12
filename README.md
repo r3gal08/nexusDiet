@@ -1,4 +1,4 @@
-# Nexus Diet - Architecture & Design Decisions
+# Nexus Diet - Information Dashboard Architecture
 
 This document records the key architectural choices and the reasoning behind them.
 
@@ -55,7 +55,11 @@ To understand the "nutritional value" of the user's information diet, the app as
 ### Extension
 -   **Manifest V3**: Future-proof Chrome extension standard.
 -   **Webpack**: Used to bundle modules (like `@mozilla/readability` and `classifier.js`).
--   **Vanilla JS**: Minimalist UI for speed and maintainability.
+-   **Vanilla JS**: Minimalist UI for the background workers, content scripts, and popup. The extension focuses solely on ingestion.
+
+### Dashboard (Frontend)
+-   **React + Vite**: A standalone modern web application for visualizing the user information diet.
+-   **Decoupled Architecture**: Separated from the browser extension so it can act as an independent UI client across multiple platforms (Web, Mobile browsers, etc.), querying the Go Backend as the single source of truth.
 
 ### Backend & Infrastructure
 -   **Go**: High-performance backend service.
@@ -67,7 +71,8 @@ To understand the "nutritional value" of the user's information diet, the app as
 
 ```mermaid
 graph TD
-    Ext["Chrome Extension"] -- "HTTPS (POST /ingest)" --> Caddy["Caddy (Reverse Proxy)"]
+    Ext["Chrome Extension (Tracker)"] -- "HTTPS (POST /ingest)" --> Caddy["Caddy (Reverse Proxy)"]
+    ReactApp["React Dashboard (Vite)"] -- "HTTPS (GET /api/visits)" --> Caddy
     Caddy -- "HTTP (:3000)" --> Tracker["Go Tracker Service"]
     Tracker -- "SQL" --> DB["PostgreSQL"]
     
