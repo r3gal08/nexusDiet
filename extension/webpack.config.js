@@ -9,8 +9,7 @@ module.exports = (env) => {
         entry: {
             background: './src/background/background.js',
             content: './src/content/content.js',
-            popup: './src/popup/popup.js',
-            dashboard: './src/dashboard/dashboard.js'
+            popup: './src/popup/popup.js'
         },
         output: {
             filename: '[name].js',
@@ -23,7 +22,6 @@ module.exports = (env) => {
                 patterns: [
                     { from: manifestFile, to: "manifest.json" },
                     { from: "src/popup/popup.html", to: "." },
-                    { from: "src/dashboard/dashboard.html", to: "." },
                 ],
             }),
         ],

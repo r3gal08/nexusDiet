@@ -21,8 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // TODO: add a check to ensure dashboard is running before opening it.
     document.getElementById('open-dashboard').addEventListener('click', () => {
-        chrome.tabs.create({ url: chrome.runtime.getURL('dashboard.html') });
+        // TODO: Url should be exported from an env file somehow
+        // Now opening the new standalone React dashboard instead of the internal one
+        chrome.tabs.create({ url: 'http://localhost:5173' });
     });
 
     // Load backend toggle and IP state

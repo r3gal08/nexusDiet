@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"nexusdiet-proxy/internal/api"
 	"nexusdiet-proxy/internal/ingestion"
 	"nexusdiet-proxy/internal/storage"
 )
@@ -25,11 +26,13 @@ func main() {
 
 	log.Println("Connected to PostgreSQL")
 
-	// 2. Initialize ingestion handler with the DB store
+	// 2. Initialize handlers with the DB store
 	ingest := ingestion.NewHandler(store)
+	dashHandler := api.NewDashboardHandler(store)
 
-	// 3. Register standard webhook route
+	// 3. Register routes
 	http.HandleFunc("/ingest", ingest.Post)
+	http.HandleFunc("/api/visits", dashHandler.GetRecentVisits)
 
 	// 4. Start server
 	// TODO: Implement graceful shutdown (Bug 4 in review) to handle SIGINT/SIGTERM properly

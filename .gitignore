@@ -20,3 +20,12 @@ bin/
 
 # Docker
 .docker/
+
+# React Dashboard
+dashboard/logs
+dashboard/*.log
+dashboard/dist/
+dashboard/*.local
+dashboard/.vscode/
+dashboard/.DS_Store
+dashboard/node_modules/
