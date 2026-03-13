@@ -4,19 +4,17 @@ This document records the key architectural choices and the reasoning behind the
 
 ## 1. Data Collection Strategy
 
-### Content Extraction via Readability.js
+### Server-Side Content Extraction
 To accurately track the user's "information diet," we must separate the signal (actual content) from the noise (boilerplate, ads, navigation).
 
-**Decision**: We use a **Hybrid Approach**:
-1.  **`Readability.js`**: For the "Meat" (Main Body Text, Title, Excerpt).
-2.  **Native DOM Scraping**: For the "Skeleton" (Headings, Metadata, OG Tags).
+**Decision**: We use a **Server-Side Parsing Strategy**:
+1.  **Raw Ingestion**: The extension captures the `outerHTML` of the page and sends it to the Go backend.
+2.  **Go-Readability**: The backend uses a Go port of Mozilla's Readability algorithm to extract the "Meat" (Body, Title, Excerpt) in a stable, isolated environment.
 
 **Reasoning**:
--   **Readability is Aggressive**: It strips away *everything* it thinks is not the main article. Sometimes that includes useful context like:
-    -   **Subtitles/Headings**: It might flatten the hierarchy.
-    -   **Metadata**: It ignores `<meta>` tags (keywords, site name, type).
-    -   **Images/Video**: While it keeps some, it might strip others that are relevant to "media diet."
--   **Fallback Safety**: If Readability fails (e.g., on a React Single Page App that loads content dynamically), native scraping ensures we still get *something* (title, URL, raw text).
+-   **Performance**: Removing heavy parsing libraries from the extension makes browser tabs faster and prevents the extension from slowing down the user's focus.
+-   **Consistency**: Parsing on the server ensures that every visit is processed using the exact same logic, regardless of browser version or platform.
+-   **Security**: By moving complex HTML parsing to a sandbox on the server, we reduce the attack surface of the browser extension.
 
 ### Centralized Data Storage (PostgreSQL)
 **Decision**: Data is pushed from the extension and stored in a centralized PostgreSQL database via the Go backend.
@@ -48,8 +46,8 @@ To understand the "nutritional value" of the user's information diet, the app as
 
 ### Extension (The Tracker)
 -   **Manifest V3**: Future-proof Chrome extension standard.
--   **Webpack**: Used to bundle modules (like `@mozilla/readability`).
--   **Vanilla JS**: Lightweight tracking scripts focused purely on ingestion. No local storage or processing logic is kept in the extension.
+-   **Stateless Architecture**: The extension has ZERO local storage and ZERO third-party parsing dependencies. It is a strictly "dumb" pipe that forwards data to the backend.
+-   **Vanilla JS**: Minimalist scripts (~600 bytes) ensure virtually zero overhead on the user's browser.
 
 ### Dashboard (The UI)
 -   **React + Vite**: A modern standalone web application for visualizing the user information diet.
@@ -77,8 +75,7 @@ graph TD
 ```
 
 ## 6. Data Schema
-
-The system uses a unified data model, whether stored in IndexedDB (extension) or PostgreSQL (backend).
+The system uses a centralized PostgreSQL schema. The browser extension no longer maintains a local schema or database.
 
 ### PostgreSQL Schema (`visits` table)
 
