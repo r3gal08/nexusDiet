@@ -18,20 +18,14 @@ To accurately track the user's "information diet," we must separate the signal (
     -   **Images/Video**: While it keeps some, it might strip others that are relevant to "media diet."
 -   **Fallback Safety**: If Readability fails (e.g., on a React Single Page App that loads content dynamically), native scraping ensures we still get *something* (title, URL, raw text).
 
-### Privacy-First Storage (IndexedDB)
-**Decision**: By default, data is stored locally in the browser's IndexedDB.
+### Centralized Data Storage (PostgreSQL)
+**Decision**: Data is pushed from the extension and stored in a centralized PostgreSQL database via the Go backend.
 
 **Reasoning**:
--   **Privacy**: User browsing history is sensitive. It should not leave the device.
--   **Capacity**: IndexedDB handles large amounts of text data much better than `chrome.storage.local`.
-
-### Hybrid Storage / Server-Sync (Optional)
-**Decision**: Users can opt-in to sync their data to a private Go-based backend (`tracker`) and PostgreSQL database.
-
-**Reasoning**:
--   **Cross-Device Access**: Allows users to view their diet history across multiple browser instances.
--   **Advanced Analysis**: Enables heavier NLP and background processing that might be too resource-intensive for the browser service worker.
--   **Self-Hosting**: Designed for technically savvy users to host their own secure data vault.
+-   **Cross-Device Access**: Allows users to view their diet history across multiple browser instances or mobile platforms.
+-   **Advanced Analysis**: Enables heavier processing (like the categorization engine) and future deep-learning analysis that would be too resource-intensive for the browser background worker.
+-   **Privacy Choice**: While the default is local network storage (self-hosted), it simplifies the extension by making it a stateless tracker rather than a local database manager.
+-   **Stateless Extension**: Removing IndexedDB from the extension significantly improves performance and reduces complex sync logic.
 
 ## 2. Backend Architecture (Go)
 
@@ -52,17 +46,17 @@ To understand the "nutritional value" of the user's information diet, the app as
 
 ## 4. Tech Stack
 
-### Extension
+### Extension (The Tracker)
 -   **Manifest V3**: Future-proof Chrome extension standard.
--   **Webpack**: Used to bundle modules (like `@mozilla/readability` and `classifier.js`).
--   **Vanilla JS**: Minimalist UI for the background workers, content scripts, and popup. The extension focuses solely on ingestion.
+-   **Webpack**: Used to bundle modules (like `@mozilla/readability`).
+-   **Vanilla JS**: Lightweight tracking scripts focused purely on ingestion. No local storage or processing logic is kept in the extension.
 
-### Dashboard (Frontend)
--   **React + Vite**: A standalone modern web application for visualizing the user information diet.
--   **Decoupled Architecture**: Separated from the browser extension so it can act as an independent UI client across multiple platforms (Web, Mobile browsers, etc.), querying the Go Backend as the single source of truth.
+### Dashboard (The UI)
+-   **React + Vite**: A modern standalone web application for visualizing the user information diet.
+-   **Decoupled Architecture**: Hosted independently from the extension, querying the Go Backend as the single source of truth.
 
 ### Backend & Infrastructure
--   **Go**: High-performance backend service.
+-   **Go**: High-performance backend service handling ingestion, classification, and API requests.
 -   **PostgreSQL**: Relational database for persistent storage.
 -   **Docker & Docker Compose**: Containerized deployment for easy setup.
 -   **Caddy**: Secure reverse proxy and TLS provider (internal and external IPs).
@@ -99,19 +93,7 @@ The system uses a unified data model, whether stored in IndexedDB (extension) or
 | **`word_count`** | `INTEGER` | Computed length of the article. |
 | **`site_name`** | `TEXT` | Source site name (e.g., "The Verge"). |
 | **`favicon`** | `TEXT` | URL to the site's favicon. |
-| **`created_at`** | `TIMESTAMP` | Record creation time. |
+| **`category`** | `TEXT` | The identified topic (Tech, Science, etc.). |
+| **`captured_at`** | `TIMESTAMPTZ` | Record creation time in UTC. |
 
-### IndexedDB Schema (visits)
-
-| Field | Type | Source | Description |
-| :--- | :--- | :--- | :--- |
-| **`url`** | `string` | `window.location` | The full URL of the visited page. |
-| **`title`** | `string` | Readability / `document.title` | The clean article headline (preferred) or the raw page title. |
-| **`contentSnippet`** | `string` | Readability / `substring` | A short excerpt (first few lines) for display in the UI history list. |
-| **`wordCount`** | `number` | Calculated | Number of words in `contentClean`. Measuring the "nutritional value" of the visit. |
-| **`favicon`** | `string` | DOM Scraping | URL to the site's favicon for UI context. |
-| **`timestamp`** | `string` | `new Date()` | ISO string of when the data was collected. |
-| **`h1s`, `h2s`, `h3s`** | `array` | DOM Scraping | Lists of headings. Provides the "Skeleton" structure of the page. |
-| **`ogTitle`, `ogType`** | `string` | Meta Tags | Open Graph metadata (e.g. `type="article"` vs `type="video"`). |
-| **`description`** | `string` | Meta Tags | The page's meta description. |
 
