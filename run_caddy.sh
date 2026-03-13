@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script to run Caddy reverse proxy for Nexus Diet hybrid deployment
+# Duckdns caddy binary: https://github.com/caddy-dns/duckdns
 
 # Ensure we are in the script's directory
 cd "$(dirname "$0")"
@@ -12,6 +13,10 @@ export PUBLIC_IP=$(curl -s --max-time 2 ifconfig.me)
 export PRIVATE_IP=$(hostname -I | awk '{print $1}')
 [ -z "$PRIVATE_IP" ] && PRIVATE_IP="localhost"
 
+# TODO: These should be stored in a secrets manager or something
+export DUCKDNS_TOKEN="hahaha"
+export DUCKDNS_DOMAIN="hehehe"
+
 echo "----------------------------------------------------"
 echo "🚀 Starting Nexus Diet Caddy Reverse Proxy..."
 echo "📍 Config: ./Caddyfile"
@@ -20,4 +25,4 @@ echo "🏠 Detected Private IP: $PRIVATE_IP"
 echo "----------------------------------------------------"
 
 # Run caddy with -E to preserve the environment variables for Caddyfile
-sudo -E caddy run --config Caddyfile
+sudo -E ./caddy run --config Caddyfile

@@ -15,11 +15,24 @@
     }
 }
 
-# Secure Endpoints (Local & Dynamic Cloud IPs)
+# 1. The DuckDNS Domain (Valid Let's Encrypt Cert via DNS Challenge)
+{$DUCKDNS_DOMAIN} {
+    log
+    
+    # Use the DNS challenge to prove ownership without opening port 80/443
+    tls {
+        dns duckdns {$DUCKDNS_TOKEN}
+    }
+
+    reverse_proxy localhost:3000
+    import cors_headers
+}
+
+# 2. Secure Endpoints (Local & Dynamic Cloud IPs)
+# Fallback access using Caddy's internal local Certificate Authority
 localhost, {$PUBLIC_IP}, {$PRIVATE_IP} {
     log
     tls internal
     reverse_proxy localhost:3000
     import cors_headers
 }
-
