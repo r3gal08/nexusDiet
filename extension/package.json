@@ -23,9 +23,7 @@
     "url": "https://github.com/r3gal08/nexusDiet/issues"
   },
   "homepage": "https://github.com/r3gal08/nexusDiet#readme",
-  "dependencies": {
-    "@mozilla/readability": "^0.6.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "copy-webpack-plugin": "^13.0.1",
     "webpack": "^5.105.2",
