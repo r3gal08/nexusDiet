@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS visits (
     word_count  INTEGER,
     site_name   TEXT,
     favicon     TEXT,
+    category    TEXT DEFAULT 'Uncategorized',
 
     -- Capture time stored as a proper timezone-aware timestamp
     captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

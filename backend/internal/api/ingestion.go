@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"nexusdiet-proxy/internal/classifier"
 	"nexusdiet-proxy/internal/parser"
 	"nexusdiet-proxy/internal/storage"
 )
@@ -67,8 +68,13 @@ func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 	log.Printf("[Ingestion] Word Count: %d", result.WordCount)
 	log.Printf("[Ingestion] Snippet:    %s\n", result.ContentSnippet)
 
+	// Run the classification heuristic
+	// Using empty string for keywords as standard go-readability doesn't map it to ArticleResult yet
+	category := classifier.Categorize(result.Title, "", result.Description, result.ContentClean)
+	log.Printf("[Classifier] Determined Category: %s", category)
+
 	// Persist to database
-	if err := h.store.InsertVisit(context.Background(), payload.URL, result); err != nil {
+	if err := h.store.InsertVisit(context.Background(), payload.URL, result, category); err != nil {
 		log.Printf("[Ingestion] DB insert failed: %v", err)
 		http.Error(w, "Failed to store visit", http.StatusInternalServerError)
 		return

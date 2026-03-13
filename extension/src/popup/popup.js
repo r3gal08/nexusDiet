@@ -1,11 +1,9 @@
-import db from '../services/db.js';
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Load stats
-    db.getStats().then(stats => {
-        document.getElementById('stats-pages').textContent = stats.pagesToday;
-        document.getElementById('stats-words').textContent = stats.wordsToday.toLocaleString();
-    }).catch(err => console.error("Failed to load stats:", err));
+    // The previous implementation loaded reading stats (words/pages today) from 
+    // the local IndexedDB using 'db.getStats()'. 
+    // TODO: We need to recreate these endpoints on the Go API and fetch them here instead.
+    document.getElementById('stats-pages').textContent = "Server Only";
+    document.getElementById('stats-words').textContent = "Server Only";
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
@@ -28,22 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.create({ url: 'http://localhost:5173' });
     });
 
-    // Load backend toggle and IP state
-    chrome.storage.local.get(['useBackendServer', 'backendIP'], (result) => {
-        const toggle = document.getElementById('backend-toggle');
+    // Load backend IP state
+    chrome.storage.local.get(['backendIP'], (result) => {
         const ipInput = document.getElementById('server-ip');
         const ipContainer = document.getElementById('server-url-container');
 
-        toggle.checked = !!result.useBackendServer;
         ipInput.value = result.backendIP || 'localhost';
-        ipContainer.style.display = toggle.checked ? 'flex' : 'none';
-    });
+        // Always show IP input since backend is now permanently required
+        ipContainer.style.display = 'flex'; 
 
-    // Save toggle state on click
-    document.getElementById('backend-toggle').addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        chrome.storage.local.set({ useBackendServer: isChecked });
-        document.getElementById('server-url-container').style.display = isChecked ? 'flex' : 'none';
+        // Hide the checkbox UI toggle if it exists since we no longer support local-only
+        const toggle = document.getElementById('backend-toggle');
+        if (toggle) {
+            toggle.disabled = true;
+            toggle.checked = true;
+        }
     });
 
     // Save IP state on change
