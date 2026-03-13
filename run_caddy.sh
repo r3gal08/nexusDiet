@@ -15,8 +15,8 @@ export PRIVATE_IP=$(hostname -I | awk '{print $1}')
 [ -z "$PRIVATE_IP" ] && PRIVATE_IP="localhost"
 
 # TODO: These should be stored in a secrets manager or something
-export DUCKDNS_TOKEN="262e4378-bd44-44d7-9044-55c1a9294d7b"
-export DUCKDNS_DOMAIN="https://r3gal08.duckdns.org"
+export DUCKDNS_TOKEN=""
+export DUCKDNS_DOMAIN=""
 
 echo "----------------------------------------------------"
 echo "🚀 Starting Nexus Diet Caddy Reverse Proxy..."
