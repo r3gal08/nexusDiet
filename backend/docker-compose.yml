@@ -6,13 +6,13 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_USER: nexus
-      POSTGRES_PASSWORD: nexus
-      POSTGRES_DB: nexusdiet
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
       # Mount the initialization script
-      - ./backend/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:z
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:z
     ports:
       # Expose for local debugging if needed, though 'tracker' connects internally
       - "5433:5432"
@@ -21,13 +21,15 @@ services:
 
   # 2. Go Backend
   tracker:
+    image: r3gal08/nexus-tracker:latest
     build: 
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     restart: always
+    env_file: .env
     environment:
       # Connect using the internal Docker network hostname ('db')
-      DATABASE_URL: postgres://nexus:nexus@db:5432/nexusdiet
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - db
     # Expose port 3000 to the host for the host-running Caddy

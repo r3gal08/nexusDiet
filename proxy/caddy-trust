@@ -1,0 +1,16 @@
+# Note: Upon further investigation I beleive that this is not needed assuming my "fallback" caddy line is removed (which it shall be in production)
+
+
+# This is a custom sudoer file to allow for the caddy user to access a few commands it needs as root...
+# Create with: sudo visudo -f /etc/sudoers.d/caddy-trust
+# Note: a future improvement may be to utilize the "trust command". See: https://github.com/caddyserver/caddy/issues/4248
+#       This could be easily automated upon server install, mostly just requires you to run "sudo caddy trust" once
+#
+# Sudoer files are great, but we are not following principles of least-privilege here as we are allowing the caddy user to access a few commands it needs as root...
+caddy ALL=(root) NOPASSWD: /usr/bin/tee /etc/pki/ca-trust/source/anchors/*, /usr/bin/update-ca-trust
+
+
+# Steps for utilziing trust command (IE: The zero-trust solution):
+# 1. sudo caddy trust
+# 2. Ensure the .pem file now exists in: /etc/pki/ca-trust/source/anchors/
+# 3. Update trust store: sudo update-ca-trust 

@@ -117,7 +117,7 @@ func (s *Store) GetRecentVisits(ctx context.Context, limit int) ([]Visit, error)
 	return visits, nil
 }
 
-// Getter method for quickly returning the total amount of rows (and therfore the total sites visited count)
+// Getter method for quickly returning the total amount of rows (visits) (and therfore the total sites visited count)
 // GetTotalVisits returns the total count of rows in the visits table.
 func (s *Store) GetTotalVisits(ctx context.Context) (int, error) {
 	var count int
