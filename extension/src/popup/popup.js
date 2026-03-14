@@ -15,8 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Dashboard Button
     document.getElementById('open-dashboard').addEventListener('click', () => {
-        // React dashboard default dev port
-        chrome.tabs.create({ url: 'http://localhost:5173' });
+        // Open the compiled dashboard bundled inside the extension package
+        const dashboardUrl = chrome.runtime.getURL('dashboard/index.html');
+        chrome.tabs.create({ url: dashboardUrl });
     });
 
     // 3. Server IP management

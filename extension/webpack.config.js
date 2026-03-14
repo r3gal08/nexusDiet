@@ -22,6 +22,13 @@ module.exports = (env) => {
                 patterns: [
                     { from: manifestFile, to: "manifest.json" },
                     { from: "src/popup/popup.html", to: "." },
+                    // Copy the entire built Dashboard
+                    { 
+                      from: path.resolve(__dirname, '../dashboard/dist'), 
+                      to: "dashboard",
+                      // Don't fail the build if the dashboard hasn't been built yet
+                      noErrorOnMissing: true 
+                    },
                 ],
             }),
         ],

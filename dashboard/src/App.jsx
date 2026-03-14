@@ -13,7 +13,28 @@ function App() {
   useEffect(() => {
     async function fetchVisits() {
       try {
-        const response = await fetch('http://localhost:3000/api/visits');
+        let baseUrl = 'http://localhost:3000'; // Default fallback
+
+        // Check if we are running inside a browser extension
+        if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+          try {
+            const result = await new Promise((resolve) => {
+              chrome.storage.local.get(['backendIP'], resolve);
+            });
+            if (result.backendIP) {
+              // Ensure the configured IP has http:// protocol
+              baseUrl = result.backendIP.startsWith('http') ? result.backendIP : `http://${result.backendIP}`;
+              // If they just put the IP/Domain, assume port 3000 for local proxy or standard 80/443
+              if (!baseUrl.includes(':', 6) && !baseUrl.includes('duckdns') && baseUrl.includes('localhost')) {
+                baseUrl += ':3000';
+              }
+            }
+          } catch (storageErr) {
+            console.error("Failed to read from extension storage:", storageErr);
+          }
+        }
+
+        const response = await fetch(`${baseUrl}/api/visits`);
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         setVisits(data.visits || []);
