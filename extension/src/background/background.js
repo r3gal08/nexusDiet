@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             let targetHost = result.backendIP || 'localhost';
             // Clean up any trailing slashes to properly format the endpoint path
             targetHost = targetHost.replace(/\/+$/, '');
-            
+
             let endpoint = '';
             // Allow the user to specify http or https to cover both Caddy (HTTPS) and local testing (HTTP/3000)
             if (targetHost.startsWith('http://') || targetHost.startsWith('https://')) {
@@ -27,13 +27,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
 
             // Send to Go Backend
-            if (request.data.html && request.data.url) {
+            if (request.data.text && request.data.url) {
                 fetch(endpoint, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         url: request.data.url,
-                        html: request.data.html
+                        title: request.data.title,
+                        text: request.data.text,
+                        snippet: request.data.snippet,
+                        siteName: request.data.siteName,
+                        byline: request.data.byline,
+                        wordCount: request.data.wordCount
                     })
                 }).then(() => {
                     // Update the lastPageData in local storage simply for popup display 

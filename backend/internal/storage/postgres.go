@@ -55,8 +55,8 @@ func (s *Store) Close() {
 // automatically inserts the exact time the row is saved.
 func (s *Store) InsertVisit(ctx context.Context, url string, result *parser.ArticleResult, category string) error {
 	_, err := s.pool.Exec(ctx, `
-		INSERT INTO visits (url, title, description, snippet, content, word_count, site_name, favicon, category)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		INSERT INTO visits (url, title, description, snippet, content, word_count, site_name, category)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	`,
 		url,
 		result.Title,
@@ -65,7 +65,6 @@ func (s *Store) InsertVisit(ctx context.Context, url string, result *parser.Arti
 		result.ContentClean,
 		result.WordCount,
 		result.SiteName,
-		result.Favicon,
 		category,
 	)
 	if err != nil {

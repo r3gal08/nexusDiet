@@ -5,16 +5,23 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
+	"time"
 
 	"nexusdiet-proxy/internal/classifier"
 	"nexusdiet-proxy/internal/parser"
 	"nexusdiet-proxy/internal/storage"
 )
 
-// WebhookPayload defines the expected JSON structure from mitmproxy
+// WebhookPayload defines the expected JSON structure from the browser extension.
 type WebhookPayload struct {
-	URL  string `json:"url"`
-	HTML string `json:"html"`
+	URL       string `json:"url"`
+	Title     string `json:"title"`
+	Text      string `json:"text"`
+	Snippet   string `json:"snippet"`
+	SiteName  string `json:"siteName"`
+	Byline    string `json:"byline"`
+	WordCount int    `json:"wordCount"`
 }
 
 // IngestionHandler holds dependencies for ingestion logic
@@ -43,16 +50,27 @@ func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if payload.HTML == "" || payload.URL == "" {
-		http.Error(w, "Missing URL or HTML", http.StatusBadRequest)
+	if payload.Text == "" || payload.URL == "" {
+		http.Error(w, "Missing URL or text content", http.StatusBadRequest)
 		return
 	}
 
-	// Extract the readable content
-	result, err := parser.Extract(payload.URL, payload.HTML)
-	if err != nil {
-		http.Error(w, "Failed to parse article", http.StatusInternalServerError)
-		return
+	// Build the ArticleResult directly from the pre-extracted payload.
+	// The extension already ran Readability.js, so no server-side parsing is needed.
+	contentClean := strings.TrimSpace(payload.Text)
+	wordCount := payload.WordCount
+	if wordCount == 0 {
+		wordCount = len(strings.Fields(contentClean))
+	}
+
+	result := &parser.ArticleResult{
+		Title:          payload.Title,
+		Description:    payload.Snippet,
+		ContentSnippet: payload.Snippet,
+		ContentClean:   contentClean,
+		WordCount:      wordCount,
+		SiteName:       payload.SiteName,
+		Timestamp:      time.Now().UTC().Format(time.RFC3339),
 	}
 
 	// Skip persisting empty or non-article payloads
@@ -62,14 +80,13 @@ func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verification Output
+	// Verification Output. TODO: Verify everything is getting received.
 	log.Printf("\n[Ingestion] Captured:   %s", result.Title)
 	log.Printf("[Ingestion] Site:       %s", result.SiteName)
 	log.Printf("[Ingestion] Word Count: %d", result.WordCount)
 	log.Printf("[Ingestion] Snippet:    %s\n", result.ContentSnippet)
 
 	// Run the classification heuristic
-	// Using empty string for keywords as standard go-readability doesn't map it to ArticleResult yet
 	category := classifier.Categorize(result.Title, "", result.Description, result.ContentClean)
 	log.Printf("[Classifier] Determined Category: %s", category)
 

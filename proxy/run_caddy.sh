@@ -28,4 +28,4 @@ echo "🏠 Detected Private IP: $PRIVATE_IP"
 echo "----------------------------------------------------"
 
 # Run caddy with -E to preserve the environment variables for Caddyfile
-sudo -E ./local/caddy run --config Caddyfile
+sudo -E caddy run --config Caddyfile_local

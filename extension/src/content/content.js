@@ -1,12 +1,32 @@
-// Content script to read DOM information - simplified for server-side parsing
+// Content script — extracts readable article text locally via Readability.js
+// Only clean text is sent to the backend; no raw HTML ever leaves the browser.
+import { Readability } from '@mozilla/readability';
+
 let hasSentData = false;
 
-// Function to extract minimal data for server-side parsing
+// Use Mozilla's Readability to extract the article from the live DOM.
+// Returns a structured payload with only text fields — no HTML.
 function extractPageData() {
+    // Readability requires a cloned document (it mutates the DOM it receives)
+    const docClone = document.cloneNode(true);
+    const article = new Readability(docClone).parse();
+
+    // If Readability can't find an article, fall back to basic text extraction
+    const text = article?.textContent || document.body.innerText || '';
+    const title = article?.title || document.title;
+    const snippet = article?.excerpt || text.substring(0, 500).replace(/\s+/g, ' ').trim();
+    const siteName = article?.siteName || '';
+    const byline = article?.byline || '';
+    const wordCount = text.split(/\s+/).filter(Boolean).length;
+
     return {
         url: window.location.href,
-        html: document.documentElement.outerHTML,
-        title: document.title,
+        title,
+        text,
+        snippet,
+        siteName,
+        byline,
+        wordCount,
         timestamp: new Date().toISOString()
     };
 }
@@ -14,7 +34,7 @@ function extractPageData() {
 // Send data when the page is loaded (or when hidden/unloaded)
 function sendData() {
     if (hasSentData) return;
-    
+
     // TODO: Here we could do some initial filtering (like removing the dashboard page, etc)
     // We only send if the page has actual content (avoiding blank tabs etc)
     if (document.body && document.body.innerText.length > 100) {
