@@ -15,13 +15,14 @@ import (
 
 // WebhookPayload defines the expected JSON structure from the browser extension.
 type WebhookPayload struct {
-	URL       string `json:"url"`
-	Title     string `json:"title"`
-	Text      string `json:"text"`
-	Snippet   string `json:"snippet"`
-	SiteName  string `json:"siteName"`
-	Byline    string `json:"byline"`
-	WordCount int    `json:"wordCount"`
+	URL           string `json:"url"`
+	Title         string `json:"title"`
+	Text          string `json:"text"`
+	Snippet       string `json:"snippet"`
+	SiteName      string `json:"siteName"`
+	Byline        string `json:"byline"`
+	PublishedTime string `json:"publishedTime"`
+	WordCount     int    `json:"wordCount"`
 }
 
 // IngestionHandler holds dependencies for ingestion logic
@@ -65,11 +66,12 @@ func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 
 	result := &parser.ArticleResult{
 		Title:          payload.Title,
-		Description:    payload.Snippet,
+		Byline:         payload.Byline,
 		ContentSnippet: payload.Snippet,
 		ContentClean:   contentClean,
 		WordCount:      wordCount,
 		SiteName:       payload.SiteName,
+		PublishedTime:  payload.PublishedTime,
 		Timestamp:      time.Now().UTC().Format(time.RFC3339),
 	}
 
@@ -80,14 +82,24 @@ func (h *IngestionHandler) Post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verification Output. TODO: Verify everything is getting received.
-	log.Printf("\n[Ingestion] Captured:   %s", result.Title)
-	log.Printf("[Ingestion] Site:       %s", result.SiteName)
-	log.Printf("[Ingestion] Word Count: %d", result.WordCount)
-	log.Printf("[Ingestion] Snippet:    %s\n", result.ContentSnippet)
+	// Verification Output. TODO: Verify everything is getting received and then likely remove these lines.....
+	log.Printf("\n[Ingestion] Captured:   %s", payload.Title)
+	log.Printf("[Ingestion] URL:        %s", payload.URL)
+	log.Printf("[Ingestion] Site:       %s", payload.SiteName)
+	log.Printf("[Ingestion] Byline:     %s", payload.Byline)
+	log.Printf("[Ingestion] Published:  %s", payload.PublishedTime)
+	log.Printf("[Ingestion] Word Count: %d", payload.WordCount)
+	log.Printf("[Ingestion] Snippet:    %s", payload.Snippet)
+	// Log the start of the full text to verify extraction quality
+	textPreview := payload.Text
+	if len(textPreview) > 100 {
+		textPreview = textPreview[:100] + "..."
+	}
+	log.Printf("[Ingestion] Full Text:  %s\n", textPreview)
+	
 
 	// Run the classification heuristic
-	category := classifier.Categorize(result.Title, "", result.Description, result.ContentClean)
+	category := classifier.Categorize(result.Title, "", result.ContentSnippet, result.ContentClean)
 	log.Printf("[Classifier] Determined Category: %s", category)
 
 	// Persist to database

@@ -17,6 +17,7 @@ function extractPageData() {
     const snippet = article?.excerpt || text.substring(0, 500).replace(/\s+/g, ' ').trim();
     const siteName = article?.siteName || '';
     const byline = article?.byline || '';
+    const publishedTime = article?.publishedTime || '';
     const wordCount = text.split(/\s+/).filter(Boolean).length;
 
     return {
@@ -26,6 +27,7 @@ function extractPageData() {
         snippet,
         siteName,
         byline,
+        publishedTime,
         wordCount,
         timestamp: new Date().toISOString()
     };

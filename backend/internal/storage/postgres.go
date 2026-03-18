@@ -54,18 +54,26 @@ func (s *Store) Close() {
 // sets "captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()", which means Postgres 
 // automatically inserts the exact time the row is saved.
 func (s *Store) InsertVisit(ctx context.Context, url string, result *parser.ArticleResult, category string) error {
+	
+	// We use an interface here because it is the only type (besides a pointer) that can hold both a string and a nil value
+	var publishedAt interface{}
+	if result.PublishedTime != "" {
+		publishedAt = result.PublishedTime
+	}
+
 	_, err := s.pool.Exec(ctx, `
-		INSERT INTO visits (url, title, description, snippet, content, word_count, site_name, category)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		INSERT INTO visits (url, title, byline, snippet, content, word_count, site_name, category, published_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	`,
 		url,
 		result.Title,
-		result.Description,
+		result.Byline,
 		result.ContentSnippet,
 		result.ContentClean,
 		result.WordCount,
 		result.SiteName,
 		category,
+		publishedAt,
 	)
 	if err != nil {
 		return fmt.Errorf("InsertVisit failed for %s: %w", url, err)

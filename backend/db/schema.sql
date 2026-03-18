@@ -8,17 +8,17 @@ CREATE TABLE IF NOT EXISTS visits (
     url         TEXT NOT NULL,
 
     -- Readability-extracted fields (see internal/parser/content.go ArticleResult)
-    title       TEXT,
-    description TEXT,       -- Article excerpt
-    snippet     TEXT,       -- Short display excerpt (~500 chars)
-    content     TEXT,       -- Full clean body text (for future classification/NLP)
-    word_count  INTEGER,
-    site_name   TEXT,
-    favicon     TEXT,
-    category    TEXT DEFAULT 'Uncategorized',
+    title           TEXT,
+    byline          TEXT,       -- Article author/credit
+    snippet         TEXT,       -- Short display excerpt (~500 chars)
+    content         TEXT,       -- Full clean body text (for future classification/NLP)
+    word_count      INTEGER,
+    site_name       TEXT,
+    category        TEXT DEFAULT 'Uncategorized',
+    published_at    TIMESTAMPTZ, -- Original publication date if available
 
     -- Capture time stored as a proper timezone-aware timestamp
-    captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    captured_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Index on time for efficient dashboard queries (e.g. "last 7 days")
