@@ -27,13 +27,3 @@
     reverse_proxy localhost:3000
     import cors_headers
 }
-
-# 2. Secure Endpoints (Local & Dynamic Cloud IPs)
-# Fallback access using Caddy's internal local Certificate Authority
-# Note: In a production environment, this is not needed and will allow us to not be required to run "caddy trust" to add the cert to the system trust store
-localhost, {$PUBLIC_IP}, {$PRIVATE_IP} {
-    log
-    tls internal
-    reverse_proxy localhost:3000
-    import cors_headers
-}

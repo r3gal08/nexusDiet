@@ -1,6 +1,7 @@
+# To build and push this container to our repository, run: docker buildx build --platform linux/arm64 -t r3gal08/nexus-tracker:latest --push .
 # Note: Consider using a "distroless" image. This would allow the go to run as a non-root user
 # Build Stage
-FROM golang:1.24-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
@@ -17,7 +18,8 @@ COPY . .
 # Build the application
 # CGO_ENABLED=0 builds a statically-linked binary, which is much more secure and portable
 # -ldflags="-w -s" strips debugging symbols to reduce binary size
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /go/bin/tracker ./cmd/tracker
+ARG TARGETOS TARGETARCH
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -ldflags="-w -s" -o /go/bin/tracker ./cmd/tracker
 
 # Final Stage (Minimal Image)
 FROM alpine:latest
