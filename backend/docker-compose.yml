@@ -38,9 +38,21 @@ services:
     networks:
       - backend
 
+  # 3. Ollama for Image Processing
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: always
+    networks:
+      - backend
 
 volumes:
   pgdata:
+  ollama_data:
 
 networks:
   backend:

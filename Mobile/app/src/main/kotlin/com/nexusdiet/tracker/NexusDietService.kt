@@ -15,6 +15,7 @@ import java.io.IOException
 
 private const val TAG = "NexusDietService"
 
+// Note: this entire idea is sort of a dead end and un-realistic, but going to keep the code in here for now....
 class NexusDietService : AccessibilityService() {
 
     private val client = OkHttpClient()
@@ -24,21 +25,25 @@ class NexusDietService : AccessibilityService() {
 
     // TODO: Properly update
     // THE MOST IMPORTANT LINE IN THE APP
-    private val blacklistedApps = listOf(
-        "com.td.bank", 
-        "com.rbc.mobile", 
-        "com.lockheedmartin.auth",
-        "com.google.android.apps.authenticator2"
+    private val whitelistedApps = listOf(
+        "com.android.chrome",
+        "com.instagram.android",
+        "com.reddit.frontpage" // Add more apps you want to track here
     )
 
     private var lastScreenshotTime = 0L
     private val captureIntervalMs = 5000L // 5 seconds
+    private var lastDeniedApp = ""
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         val packageName = event.packageName?.toString() ?: return
 
-        // 1. The Hard Gate (Do not capture banking/work apps)
-        if (blacklistedApps.contains(packageName)) {
+        // 1. The Hard Gate (Only capture specific whitelisted apps)
+        if (!whitelistedApps.contains(packageName)) {
+            if (packageName != lastDeniedApp) {
+                Log.d(TAG, "App denied (not in whitelist): $packageName")
+                lastDeniedApp = packageName
+            }
             return 
         }
 
