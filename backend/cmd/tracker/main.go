@@ -31,6 +31,7 @@ func main() {
 
 	// 3. Register routes
 	http.HandleFunc("/ingest", ingestHandler.Post)
+	http.HandleFunc("/api/ingest-frame", api.IngestFrame)
 	http.HandleFunc("/api/visits", dashHandler.GetRecentVisits)
 
 	// 4. Start server
