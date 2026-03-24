@@ -1,11 +1,9 @@
 # Dependencies
 node_modules/
-extension/node_modules/
 
 # Build Output
 dist/
 local/
-extension/local/
 
 # Archive
 Archive/
@@ -14,8 +12,7 @@ Archive/
 .DS_Store
 Thumbs.db
 
-# Go Build Output
-backend/bin/
+# Build Output (additional)
 bin/
 
 # Docker
@@ -24,11 +21,8 @@ bin/
 # React Dashboard
 dashboard/logs
 dashboard/*.log
-dashboard/dist/
 dashboard/*.local
 dashboard/.vscode/
-dashboard/.DS_Store
-dashboard/node_modules/
 
 # Mobile (Android)
 Mobile/.gradle/
