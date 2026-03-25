@@ -34,16 +34,23 @@ function extractPageData() {
 }
 
 // Send data when the page is loaded (or when hidden/unloaded)
-function sendData() {
-    if (hasSentData) return;
+function sendData(force = false) {
+    if (hasSentData && !force) return;
 
-    // TODO: Here we could do some initial filtering (like removing the dashboard page, etc)
-    // We only send if the page has actual content (avoiding blank tabs etc)
-    if (document.body && document.body.innerText.length > 100) {
-        hasSentData = true;
-        const pageData = extractPageData();
-        chrome.runtime.sendMessage({ type: "DATA_COLLECTED", data: pageData });
-    }
+    // Check user preference before auto-sending
+    chrome.storage.local.get(['autoSend'], (result) => {
+        const isAutoSend = result.autoSend || false;
+        
+        // If not forcing and auto-send is off, do nothing
+        if (!force && !isAutoSend) return;
+
+        // We only send if the page has actual content (avoiding blank tabs etc)
+        if (document.body && document.body.innerText.length > 100) {
+            hasSentData = true;
+            const pageData = extractPageData();
+            chrome.runtime.sendMessage({ type: "DATA_COLLECTED", data: pageData });
+        }
+    });
 }
 
 // Trigger points for ingestion
@@ -62,12 +69,15 @@ window.addEventListener('beforeunload', () => {
     sendData();
 });
 
-// Also listen for requests from popup to display the title
+// Also listen for requests from popup context
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === "GET_PAGE_DATA") {
         sendResponse({
             title: document.title,
             url: window.location.href
         });
+    } else if (request.type === "FORCE_SEND_DATA") {
+        sendData(true);
+        sendResponse({ success: true });
     }
 });

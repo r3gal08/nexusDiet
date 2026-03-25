@@ -65,8 +65,14 @@
       width: 100%;
     }
 
-    .btn:hover {
+    .btn:hover:not(:disabled) {
       background: #1d4ed8;
+    }
+
+    .btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      opacity: 0.7;
     }
 
     .config-section {
@@ -84,6 +90,24 @@
       box-sizing: border-box;
       margin-top: 4px;
     }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-container label {
+      font-size: 12px;
+      color: #374151;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -99,12 +123,23 @@
       <div class="value" id="page-title">Detecting...</div>
     </div>
 
-    <button id="open-dashboard" class="btn">
-      View Full Dashboard
+    <button id="send-data-btn" class="btn" style="margin-bottom: 4px;">
+      Send
+    </button>
+
+    <button id="open-dashboard" class="btn" style="background: #4b5563;">
+      Dashboard
     </button>
 
     <div class="config-section">
-      <div class="label">Server Connection</div>
+      <div class="label">Settings</div>
+      
+      <div class="checkbox-container">
+        <input type="checkbox" id="auto-send-checkbox">
+        <label for="auto-send-checkbox">Send data automatically</label>
+      </div>
+
+      <div class="label" style="margin-top: 12px;">Server Connection</div>
       <div id="server-url-container">
         <input type="text" id="server-ip" placeholder="localhost" title="Enter Go Backend IP or Domain">
       </div>
