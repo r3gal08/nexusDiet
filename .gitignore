@@ -24,11 +24,11 @@ dashboard/*.log
 dashboard/*.local
 dashboard/.vscode/
 
-# Mobile (Android)
-Mobile/.gradle/
-Mobile/build/
-Mobile/app/build/
-Mobile/local.properties
+# mobile (Android)
+mobile/.gradle/
+mobile/build/
+mobile/app/build/
+mobile/local.properties
 
 # Backend Frames
 backend/frames/
