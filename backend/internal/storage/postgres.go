@@ -131,3 +131,15 @@ func (s *Store) GetTotalVisits(ctx context.Context) (int, error) {
 	err := s.pool.QueryRow(ctx, "SELECT COUNT(*) FROM visits").Scan(&count)
 	return count, err
 }
+
+// InsertMobileSnippet inserts a new snippet from the Android app
+func (s *Store) InsertMobileSnippet(ctx context.Context, deviceID, contextApp, summary, rawText string) error {
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO mobile_snippets (device_id, context_app, summary, raw_text)
+		VALUES ($1, $2, $3, $4)
+	`, deviceID, contextApp, summary, rawText)
+	if err != nil {
+		return fmt.Errorf("InsertMobileSnippet failed for device %s: %w", deviceID, err)
+	}
+	return nil
+}

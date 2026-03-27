@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// TODO: Consider in the future creating some proper structures here so we can just have this simply be a POST method and adhere to the rest of our code...
 // IngestFrame handles incoming screenshots from the mobile tracker
 func IngestFrame(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

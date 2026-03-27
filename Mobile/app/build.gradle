@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.nexusdiet.tracker"
-        minSdk 30
+        minSdk 31
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -40,4 +40,10 @@ dependencies {
     
     // Networking
     implementation "com.squareup.okhttp3:okhttp:4.11.0"
+    
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    
+    // Gemini Nano / AICore (Placeholder version for Local LLM)
+    implementation "com.google.ai.edge.aicore:aicore:0.0.1-exp01"
 }

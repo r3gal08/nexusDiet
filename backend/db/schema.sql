@@ -26,3 +26,13 @@ CREATE INDEX IF NOT EXISTS idx_visits_captured_at ON visits(captured_at);
 
 -- Index on URL to detect duplicate/revisited pages
 CREATE INDEX IF NOT EXISTS idx_visits_url ON visits(url);
+
+-- App Assist payload 
+CREATE TABLE IF NOT EXISTS mobile_snippets (
+    id SERIAL PRIMARY KEY,
+    device_id TEXT NOT NULL,
+    context_app TEXT NOT NULL,
+    summary TEXT,
+    raw_text TEXT,
+    captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
