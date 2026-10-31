@@ -1,0 +1,41 @@
+timestamp,platform,medium,source,primary_subject,category,tone,lean,seconds
+2026-10-29 06:50,X,feed,@capitolbrief,Morning headlines,news,negative,left,90
+2026-10-29 07:05,Instagram,feed,@civicpulse,Rally draws record crowd,news,positive,left,240
+2026-10-29 07:20,X,feed,@capitolbrief,Energy policy fight,news,negative,left,210
+2026-10-29 07:35,Web,article,The Daily Ledger,Energy policy fight,news,negative,left,330
+2026-10-29 07:55,Web,article,Northern Wire,Energy policy fight,news,negative,left,300
+2026-10-29 08:10,Instagram,feed,@civicpulse,Story: poll results,news,positive,left,120
+2026-10-29 08:30,YouTube,video,Sharp Takes,Energy policy fight,news,negative,left,720
+2026-10-29 09:10,X,feed,@capitolbrief,Court ruling on voting rules,news,negative,left,150
+2026-10-29 09:45,Web,article,Civic Brief,Court ruling on voting rules,news,negative,left,300
+2026-10-29 10:00,Web,article,StackNotes,Writing clearer status updates,tech,neutral,n/a,300
+2026-10-29 10:30,Web,article,Meridian Post,Court ruling on voting rules,news,neutral,center,150
+2026-10-29 11:05,Instagram,feed,@civicpulse,Carousel: five wins this week,news,positive,left,180
+2026-10-29 11:40,Reddit,forum,r/news,Court ruling on voting rules,news,negative,n/a,420
+2026-10-29 12:10,X,feed,@capitolbrief,Lunchtime scroll: reactions,news,negative,left,180
+2026-10-29 12:30,YouTube,video,Plate & Pan,One-pan chicken and rice,lifestyle,positive,n/a,480
+2026-10-29 12:45,Web,article,The Daily Ledger,Healthcare funding fight,news,negative,left,300
+2026-10-29 13:05,Web,article,Frontline Tribune,Energy policy fight,news,negative,right,12
+2026-10-29 13:10,X,feed,@capitolbrief,Energy policy fight,news,negative,left,240
+2026-10-29 13:40,Web,article,Northern Wire,Healthcare funding fight,news,negative,left,270
+2026-10-29 14:20,Instagram,feed,@civicpulse,Carousel: who is blocking the bill,news,negative,left,150
+2026-10-29 14:45,Instagram,feed,@movewell,Mobility routine,lifestyle,positive,n/a,150
+2026-10-29 15:00,Reddit,forum,r/PoliticalDiscussion,Energy policy fight,news,negative,n/a,540
+2026-10-29 15:45,Web,article,Harbor Report,Healthcare funding fight,news,neutral,center,180
+2026-10-29 16:00,Web,article,Local Gazette,Library reopens after volunteer drive,news,positive,n/a,90
+2026-10-29 16:30,X,feed,@capitolbrief,Healthcare funding fight,news,negative,left,120
+2026-10-29 17:15,Web,article,Civic Brief,Healthcare funding fight,news,negative,left,330
+2026-10-29 17:40,YouTube,video,Sharp Takes,Short: three things Congress did today,news,negative,left,180
+2026-10-29 18:30,YouTube,video,Garden Hour,Balcony herb garden tips,lifestyle,positive,n/a,600
+2026-10-29 19:10,Reddit,forum,r/aww,Cat fits in a shoebox,entertainment,positive,n/a,120
+2026-10-29 19:30,YouTube,video,Reel Rooms,Stand-up comedy special,entertainment,positive,n/a,1800
+2026-10-29 20:15,Instagram,feed,@civicpulse,Reel: protest highlights,news,positive,left,300
+2026-10-29 20:40,X,feed,@capitolbrief,Energy policy fight,news,negative,left,360
+2026-10-29 21:00,Web,article,The Daily Ledger,Energy policy fight,news,negative,left,420
+2026-10-29 21:20,Reddit,forum,r/news,Energy policy fight,news,negative,n/a,660
+2026-10-29 21:40,Web,article,The Daily Ledger,Energy policy fight,news,negative,left,360
+2026-10-29 22:10,YouTube,video,Sharp Takes,Election strategy panel,news,negative,left,1320
+2026-10-29 22:40,X,feed,@capitolbrief,Court ruling on voting rules,news,negative,left,240
+2026-10-29 23:00,Instagram,feed,@civicpulse,Carousel: how to contact your representative,news,positive,left,210
+2026-10-29 23:20,Web,article,Northern Wire,Court ruling on voting rules,news,negative,left,300
+2026-10-29 23:35,X,feed,@capitolbrief,Final check before bed,news,negative,left,150

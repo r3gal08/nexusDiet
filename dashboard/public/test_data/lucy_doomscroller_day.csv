@@ -1,0 +1,41 @@
+timestamp,platform,medium,source,primary_subject,category,tone,lean,seconds
+2026-10-27 06:52,X,feed,@worldalerts,Overnight strikes and casualty reports,news,negative,n/a,420
+2026-10-27 07:01,Reddit,forum,r/worldnews,Ceasefire talks collapse,news,negative,n/a,600
+2026-10-27 07:14,Web,article,The Daily Ledger,Ceasefire talks collapse,news,negative,left,330
+2026-10-27 07:31,Web,article,Meridian Post,Grid strain as heatwave records fall,climate,negative,center,270
+2026-10-27 07:48,Instagram,feed,@climatewatch,Wildfire footage compilation,climate,negative,n/a,360
+2026-10-27 08:20,Web,article,Harbor Report,Rate hike fears and layoff warnings,finance,negative,center,210
+2026-10-27 08:35,X,feed,@marketpulse,Recession odds climbing,finance,negative,n/a,300
+2026-10-27 09:15,X,feed,@worldalerts,Morning headline roundup,news,negative,n/a,90
+2026-10-27 09:40,Web,article,Northern Wire,Housing costs hit new high,finance,negative,left,150
+2026-10-27 10:25,Reddit,forum,r/economics,Job market contraction thread,finance,negative,n/a,240
+2026-10-27 10:50,Instagram,feed,@newsinbrief,Carousel: week in review,news,negative,n/a,120
+2026-10-27 11:10,Web,article,StackNotes,Postgres vacuum tuning basics,tech,neutral,n/a,480
+2026-10-27 11:45,Web,article,StackNotes,Running blameless postmortems,tech,neutral,n/a,360
+2026-10-27 12:15,X,feed,@worldalerts,Breaking: tanker attack,news,negative,n/a,180
+2026-10-27 12:22,Web,article,The Daily Ledger,Tanker attack raises shipping fears,news,negative,left,270
+2026-10-27 12:40,YouTube,video,Plate & Pan,15-minute lentil soup,lifestyle,positive,n/a,540
+2026-10-27 12:55,Reddit,forum,r/worldnews,Tanker attack aftermath,news,negative,n/a,420
+2026-10-27 13:10,X,feed,@marketpulse,Bank earnings reaction,finance,neutral,n/a,120
+2026-10-27 13:30,Web,article,Civic Brief,Election disinformation surge,news,negative,left,300
+2026-10-27 14:05,Instagram,feed,@newsinbrief,Carousel: five crises this week,news,negative,n/a,210
+2026-10-27 14:50,Web,article,Meridian Post,Coastal flooding displaces thousands,climate,negative,center,330
+2026-10-27 15:05,Web,article,Meridian Post,Drought deepens across farmland,climate,negative,center,180
+2026-10-27 15:30,Reddit,forum,r/climate,Arctic ice hits record low,climate,negative,n/a,360
+2026-10-27 16:15,Web,article,Northern Wire,Wildfire season costs insurers billions,climate,negative,left,240
+2026-10-27 16:45,X,feed,@worldalerts,Diplomatic standoff continues,news,negative,n/a,90
+2026-10-27 17:10,X,feed,@marketpulse,Markets slide on rate fears,finance,negative,n/a,270
+2026-10-27 17:50,Web,article,Local Gazette,Library reopens after volunteer drive,news,positive,n/a,120
+2026-10-27 18:20,Web,article,Local Gazette,Community garden wins award,lifestyle,positive,n/a,100
+2026-10-27 19:05,Reddit,forum,r/aww,Dog meets first snow,entertainment,positive,n/a,150
+2026-10-27 19:30,YouTube,video,Reel Rooms,Cozy mystery series episode,entertainment,neutral,n/a,1500
+2026-10-27 20:30,X,feed,@worldalerts,Evening update: casualties rise,news,negative,n/a,480
+2026-10-27 20:45,Reddit,forum,r/collapse,Supply chain fragility discussion,news,negative,n/a,900
+2026-10-27 21:15,YouTube,video,Deep Current,Climate tipping points explained,climate,negative,n/a,1500
+2026-10-27 21:50,Web,article,The Daily Ledger,Scientists warn of accelerating ice loss,climate,negative,left,360
+2026-10-27 22:10,Instagram,feed,@newsinbrief,Carousel: what experts fear for 2030,news,negative,n/a,420
+2026-10-27 22:25,Reddit,forum,r/worldnews,Escalation fears,news,negative,n/a,780
+2026-10-27 22:50,X,feed,@marketpulse,Debt crisis threads,finance,negative,n/a,540
+2026-10-27 23:15,YouTube,video,Deep Current,Food system collapse clip,news,negative,n/a,1200
+2026-10-27 23:40,Web,article,Frontline Tribune,Analysts warn of instability,finance,negative,right,300
+2026-10-27 23:48,Instagram,feed,@climatewatch,Reel: heat dome map,climate,negative,n/a,300

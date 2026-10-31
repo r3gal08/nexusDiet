@@ -1,10 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Activity, Clock, Globe, ArrowUpRight } from 'lucide-react';
+import DemoDashboard from './demo/DemoDashboard';
+import './demo/demo.css';
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#f43f5e', '#6366f1', '#14b8a6'];
 
 function App() {
+  const [demoMode, setDemoMode] = useState(false);
   const [visits, setVisits] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [error, setError] = useState(null);
@@ -69,6 +72,11 @@ function App() {
     return map;
   }, [chartData]);
 
+  // Demo mode: render after all hooks are declared
+  if (demoMode) {
+    return <DemoDashboard onExitDemo={() => setDemoMode(false)} />;
+  }
+
   if (loading) {
     return (
       <div className="loading-state">
@@ -84,6 +92,9 @@ function App() {
         <Activity size={48} />
         <p>Error: {error}</p>
         <p style={{fontSize: 12}}>Make sure the Go backend is running on port 3000.</p>
+        <button className="demo-btn demo-btn-enter" onClick={() => setDemoMode(true)}>
+          📊 Try demo with sample data
+        </button>
       </div>
     );
   }
@@ -93,6 +104,9 @@ function App() {
       <div className="empty-state">
         <Globe size={48} />
         <p>No visits recorded yet. Browse some articles with your extension!</p>
+        <button className="demo-btn demo-btn-enter" onClick={() => setDemoMode(true)}>
+          📊 Try demo with sample data
+        </button>
       </div>
     );
   }

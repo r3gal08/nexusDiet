@@ -1,0 +1,137 @@
+/* ── Demo mode styles ─────────────────────────────────────────────── */
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.demo-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.demo-btn-ghost {
+  background: transparent;
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.demo-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.demo-btn-enter {
+  margin-top: 12px;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.demo-select {
+  padding: 7px 12px;
+  font-size: 13px;
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.demo-select:hover, .demo-select:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(35, 40, 50, 0.9);
+}
+
+.demo-select option {
+  background: #191c23;
+  color: #f3f4f6;
+}
+
+/* Chart title (non-absolute, inline version for demo panels) */
+.chart-title-inline {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* Two-column row: donut + insights */
+.demo-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 860px) {
+  .demo-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-col-chart {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-col-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Insight cards */
+.insight-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px !important;
+}
+
+.insight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.insight-headline {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.insight-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
