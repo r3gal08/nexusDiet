@@ -1,0 +1,32 @@
+timestamp,platform,medium,source,primary_subject,category,tone,lean,seconds
+2026-10-28 06:40,Web,article,Packet Journal,Sleep tracking methods,lifestyle,neutral,n/a,420
+2026-10-28 07:00,Reddit,forum,r/QuantifiedSelf,Sleep tracking methods,lifestyle,neutral,n/a,360
+2026-10-28 07:20,Web,article,Meridian Post,Privacy law changes,news,neutral,center,240
+2026-10-28 07:40,Web,forum,Hacker News,Local LLM inference on laptops,tech,neutral,n/a,480
+2026-10-28 08:15,Web,article,StackNotes,Local LLM inference on laptops,tech,positive,n/a,600
+2026-10-28 08:50,Web,article,Harbor Report,Mortgage renewal options,finance,neutral,center,210
+2026-10-28 09:30,Web,article,StackNotes,Go concurrency patterns,tech,neutral,n/a,900
+2026-10-28 10:30,Web,article,Packet Journal,Kubernetes network policies,tech,neutral,n/a,780
+2026-10-28 11:00,Web,article,Packet Journal,Go concurrency patterns,tech,neutral,n/a,300
+2026-10-28 11:30,Web,forum,Hacker News,Zero trust architecture,tech,neutral,n/a,420
+2026-10-28 12:10,YouTube,video,Systems Hour,Self-hosting a home server,tech,positive,n/a,1200
+2026-10-28 12:40,Reddit,forum,r/selfhosted,Self-hosting a home server,tech,positive,n/a,540
+2026-10-28 13:30,Web,article,Packet Journal,Zero trust architecture,tech,neutral,n/a,660
+2026-10-28 14:00,Web,forum,Hacker News,Self-hosting a home server,tech,positive,n/a,360
+2026-10-28 14:30,Web,article,Privacy Brief,Data breach disclosure,news,negative,n/a,300
+2026-10-28 15:15,Web,article,Frontline Tribune,Privacy law changes,news,neutral,right,210
+2026-10-28 15:30,Web,article,The Daily Ledger,Privacy law changes,news,neutral,left,240
+2026-10-28 15:50,Web,article,StackNotes,Go concurrency patterns,tech,neutral,n/a,420
+2026-10-28 16:10,Reddit,forum,r/QuantifiedSelf,Sleep tracking methods,lifestyle,positive,n/a,240
+2026-10-28 16:30,Web,article,Packet Journal,Local LLM inference on laptops,tech,positive,n/a,540
+2026-10-28 17:15,Reddit,forum,r/ObsidianMD,Obsidian workflows,tech,neutral,n/a,300
+2026-10-28 17:40,Web,article,StackNotes,Obsidian workflows,tech,positive,n/a,360
+2026-10-28 18:30,YouTube,video,Lift Lab,Strength training progression,lifestyle,positive,n/a,900
+2026-10-28 19:15,Web,article,Lift Lab,Strength training progression,lifestyle,positive,n/a,300
+2026-10-28 19:45,Web,article,Packet Journal,Self-hosting a home server,tech,positive,n/a,720
+2026-10-28 20:10,Web,article,Harbor Report,Mortgage renewal options,finance,neutral,center,270
+2026-10-28 20:30,YouTube,video,Systems Hour,Local LLM inference on laptops,tech,positive,n/a,1800
+2026-10-28 21:15,Web,forum,Hacker News,Data breach disclosure,news,negative,n/a,240
+2026-10-28 21:30,Web,article,Privacy Brief,Data breach disclosure,news,negative,n/a,300
+2026-10-28 21:50,Web,article,Packet Journal,Sleep tracking methods,lifestyle,neutral,n/a,480
+2026-10-28 22:20,YouTube,video,Reel Rooms,Documentary: deep sea exploration,entertainment,positive,n/a,1500

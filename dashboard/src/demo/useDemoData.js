@@ -17,6 +17,7 @@ import Papa from 'papaparse';
 export const PRESET_DATASETS = [
   { id: 'lucy', label: 'Lucy: Doomscroller', file: 'lucy_doomscroller_day.csv' },
   { id: 'alyssa', label: 'Alyssa: Echo Chamber', file: 'alyssa_echochamber_day.csv' },
+  { id: 'elizabeth', label: 'Elizabeth: Sovereign Mind', file: 'elizabeth_sovereign_day.csv' },
 ];
 
 const DEFAULT_PRESET = PRESET_DATASETS[0];
@@ -29,7 +30,7 @@ function parseCSV(text) {
   const { data, errors } = Papa.parse(text, {
     header: true,
     skipEmptyLines: true,
-    dynamicTyping: false, // we type manually to protect "n/a"
+    dynamicTyping: false,
   });
 
   if (errors.length) {
@@ -44,15 +45,13 @@ function parseCSV(text) {
     primary_subject: (row.primary_subject || '').trim(),
     category: (row.category || '').trim(),
     tone: (row.tone || '').trim(),
-    lean: (row.lean || '').trim(),                 // keeps "n/a"
+    lean: (row.lean || '').trim(),
     seconds: parseInt(row.seconds, 10) || 0,
   }));
 }
 
 /**
  * Hook for demo mode.
- *
- * Returns { rows, fileName, selectedPresetId, loading, error, loadPreset, loadFile }.
  */
 export function useDemoData() {
   const [rows, setRows] = useState([]);
@@ -61,7 +60,6 @@ export function useDemoData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load a preset file from public/test_data/
   const loadPreset = useCallback(async (presetId) => {
     const preset = PRESET_DATASETS.find((p) => p.id === presetId);
     if (!preset) return;
@@ -83,7 +81,6 @@ export function useDemoData() {
     }
   }, []);
 
-  // Load a custom File object from a file-picker
   const loadFile = useCallback((file) => {
     setLoading(true);
     setError(null);
@@ -108,7 +105,6 @@ export function useDemoData() {
     reader.readAsText(file);
   }, []);
 
-  // Initial load on mount
   useEffect(() => {
     loadPreset(DEFAULT_PRESET.id);
   }, [loadPreset]);

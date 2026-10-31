@@ -14,6 +14,17 @@ const TONE_COLORS = {
   positive: '#10b981',
 };
 
+/* ── Platform colours ───────────────────────────────────────────── */
+const PLATFORM_COLORS = {
+  Web:       '#3b82f6',
+  Reddit:    '#f97316',
+  YouTube:   '#ef4444',
+  X:         '#06b6d4',
+  Instagram: '#ec4899',
+};
+
+const getPlatformColor = (platform) => PLATFORM_COLORS[platform] || '#8b5cf6';
+
 /* ── Category colours ────────────────────────────────────────────── */
 const CATEGORY_COLORS = {
   news:          '#3b82f6',
@@ -101,7 +112,18 @@ export default function DemoDashboard({ onExitDemo }) {
       .sort((a, b) => b.seconds - a.seconds);
   }, [rows]);
 
-  // 3. Hourly timeline stacked by tone
+  // 3. Platform breakdown (pie/donut data)
+  const platformData = useMemo(() => {
+    const map = {};
+    rows.forEach((r) => {
+      map[r.platform] = (map[r.platform] || 0) + r.seconds;
+    });
+    return Object.entries(map)
+      .map(([name, seconds]) => ({ name, seconds }))
+      .sort((a, b) => b.seconds - a.seconds);
+  }, [rows]);
+
+  // 4. Hourly timeline stacked by tone
   const hourlyData = useMemo(() => {
     if (!rows.length) return [];
     const buckets = {};
@@ -120,7 +142,7 @@ export default function DemoDashboard({ onExitDemo }) {
     return result;
   }, [rows]);
 
-  // 4. Insights
+  // 5. Insights
   const insights = useMemo(() => generateInsights(rows), [rows]);
 
   /* ── Loading / Error ───────────────────────────────────────────── */
@@ -243,9 +265,9 @@ export default function DemoDashboard({ onExitDemo }) {
           </ResponsiveContainer>
         </div>
 
-        {/* ── Row: Tone donut + Insights ──────────────────────────── */}
+        {/* ── Row: Tone donut & Platform donut ─────────────────────── */}
         <div className="demo-row">
-          {/* 2. Tone donut */}
+          {/* Tone donut */}
           <div className="glass-panel demo-col-chart">
             <div className="chart-title-inline">Tone Breakdown</div>
             <ResponsiveContainer width="100%" height={280}>
@@ -272,7 +294,7 @@ export default function DemoDashboard({ onExitDemo }) {
                 <Legend
                   formatter={(value) => {
                     const item = toneData.find((d) => d.name === value);
-                    const pct = item ? Math.round((item.seconds / totalSec) * 100) : 0;
+                    const pct = totalSec ? Math.round((item.seconds / totalSec) * 100) : 0;
                     return `${value} (${pct}%)`;
                   }}
                   wrapperStyle={{ fontSize: 13, color: '#9ca3af' }}
@@ -281,8 +303,47 @@ export default function DemoDashboard({ onExitDemo }) {
             </ResponsiveContainer>
           </div>
 
-          {/* 4. Insight cards */}
-          <div className="demo-col-insights">
+          {/* Platform donut */}
+          <div className="glass-panel demo-col-chart">
+            <div className="chart-title-inline">Platform Breakdown</div>
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie
+                  data={platformData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={110}
+                  paddingAngle={4}
+                  dataKey="seconds"
+                  stroke="none"
+                >
+                  {platformData.map((entry) => (
+                    <Cell key={entry.name} fill={getPlatformColor(entry.name)} />
+                  ))}
+                </Pie>
+                <RechartsTooltip
+                  formatter={(value) => fmtMin(value)}
+                  contentStyle={tooltipStyle}
+                  itemStyle={{ color: '#f3f4f6' }}
+                />
+                <Legend
+                  formatter={(value) => {
+                    const item = platformData.find((d) => d.name === value);
+                    const pct = totalSec ? Math.round((item.seconds / totalSec) * 100) : 0;
+                    return `${value} (${pct}%)`;
+                  }}
+                  wrapperStyle={{ fontSize: 13, color: '#9ca3af' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* ── Insights row ────────────────────────────────────────── */}
+        <div className="glass-panel" style={{ padding: 24 }}>
+          <div className="chart-title-inline">Key Insights</div>
+          <div className="demo-insights-grid">
             {insights.map((ins, i) => (
               <div key={i} className="glass-panel insight-card">
                 <span className="insight-icon">{ins.icon}</span>
@@ -295,7 +356,7 @@ export default function DemoDashboard({ onExitDemo }) {
           </div>
         </div>
 
-        {/* ── 3. Hourly timeline ──────────────────────────────────── */}
+        {/* ── Hourly timeline ─────────────────────────────────────── */}
         <div className="glass-panel" style={{ padding: 24 }}>
           <div className="chart-title-inline">Hourly Timeline</div>
           <ResponsiveContainer width="100%" height={300}>
